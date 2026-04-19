@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'cities_page.dart';
+import 'poetry_page.dart';
+import 'tools_page.dart';
+import 'culture_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -184,10 +187,36 @@ class CustomCard extends StatelessWidget {
             context,
             MaterialPageRoute(
               builder: (context) => const CitiesPage(),
-            ),
-          );
-        }
-      },
+           ),
+         );
+       }
+
+       if (title == "لغن و الأمثلة الموريتانية") {
+         Navigator.push(
+           context,
+           MaterialPageRoute(
+             builder: (context) => const PoetryPage(),
+           ),
+         );
+       }
+      if (title == "أدوات تقليدية") {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const ToolsPage(),
+    ),
+  );
+} 
+
+    if (title == "العادات والتقاليد") {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const CulturePage(),
+    ),
+  );
+}
+  },
 
       child: Container(
         decoration: BoxDecoration(

@@ -50,14 +50,14 @@ class CitiesPage extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _smallImage(
-                      "assets/images/Ouadane.jpeg",
+                      "assets/images/ouadane.jpeg",
                       "وادان",
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     child: _smallImage(
-                      "assets/images/Tichitt.jpeg",
+                      "assets/images/tichitt.jpeg",
                       "تيشيت",
                     ),
                   ),
@@ -68,7 +68,7 @@ class CitiesPage extends StatelessWidget {
 
               /// 🟫 BIG IMAGE (ولاتة)
               _bigImage(
-                "assets/images/Oualata.jpeg",
+                "assets/images/oualata.jpeg",
                 "ولاتة",
               ),
 
@@ -85,7 +85,7 @@ class CitiesPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: const [
                     Text(
-                      "الوصف",
+                      "📜 المدن التاريخية الموريتانية",
                       style: TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.bold,
@@ -96,7 +96,7 @@ class CitiesPage extends StatelessWidget {
                     SizedBox(height: 15),
 
                     Text(
-                      "تُعد المدن التاريخية في موريتانيا من أهم مراكز الحضارة الإسلامية في غرب إفريقيا.",
+                      "تُعد المدن التاريخية الأربع في موريتانيا، وهي شنقيط ووادان وتيشيت وولاتة، من أهم الشواهد على عراقة الحضارة الإسلامية في الصحراء الكبرى، وقد صُنّفت ضمن التراث العالمي لما لعبته من دور علمي وتجاري وثقافي عبر القرون.",
                       style: TextStyle(
                         color: Color(0xFF6B5B56),
                         height: 1.6,
@@ -106,7 +106,8 @@ class CitiesPage extends StatelessWidget {
                     SizedBox(height: 10),
 
                     Text(
-                      "شنقيط كانت مركزاً علمياً كبيراً، ووادان محطة للقوافل، وتيشيت مدينة تجارية، وولاتة معروفة بزخارفها المعمارية.",
+                      "شنقيط تُعتبر من أقدم هذه المدن، حيث يعود تاريخها إلى القرن الثامن الميلادي تقريبًا، وكانت مركزًا علميًا ودينيًا مهمًا، وارتبط اسمها بالعلماء والمخطوطات، حتى أصبحت رمزًا للثقافة الإسلامية في المنطقة . أما وادان فقد ازدهرت في القرن السادس الهجري، وكانت محطة رئيسية للقوافل التجارية في الصحراء، ومركزًا للعلم والتبادل الثقافي بين شمال إفريقيا وغربها",
+                      
                       style: TextStyle(
                         color: Color(0xFF6B5B56),
                         height: 1.6,
@@ -116,7 +117,7 @@ class CitiesPage extends StatelessWidget {
                     SizedBox(height: 10),
 
                     Text(
-                      "هذه المدن تمثل تراثاً إنسانياً عظيماً وتعكس تاريخ الصحراء وثقافتها.",
+                      ". أما ولاتة فقد تأسست سنة 1224م، وكانت منارة علمية وثقافية كبرى، وموطنًا للعلماء، كما شكلت محطة مهمة في طرق القوافل الصحراوية، واشتهرت بازدهارها العلمي والديني .بينما تُعد تيشيت من أقدم المدن عمرانًا، إذ يرجع تأسيسها إلى القرن الثاني عشر الميلادي تقريبًا، وقد عرفت بدورها التجاري والعلمي، وكانت من المدن التي حافظت على طابعها المعماري الصحراوي عبر الزمن",
                       style: TextStyle(
                         color: Color(0xFF6B5B56),
                         height: 1.6,
