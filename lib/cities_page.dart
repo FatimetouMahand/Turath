@@ -151,10 +151,10 @@ class CitiesPage extends StatelessWidget {
     );
   }
 
-  /// 🟫 BIG IMAGE
+  /// 🟫 BIG IMAGE (Style moderne)
   Widget _bigImage(String path, String title) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
+      borderRadius: BorderRadius.circular(10), // Style moderne
       child: Stack(
         children: [
           Image.asset(
@@ -162,17 +162,8 @@ class CitiesPage extends StatelessWidget {
             height: 250,
             width: double.infinity,
             fit: BoxFit.cover,
-          ),
-
-          Container(
-            height: 250,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black45, Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ),
-            ),
+            color: Colors.black.withOpacity(0.2), // Filtre sombre moderne
+            colorBlendMode: BlendMode.darken,
           ),
 
           Positioned(
@@ -192,10 +183,10 @@ class CitiesPage extends StatelessWidget {
     );
   }
 
-  /// 🟦 SMALL IMAGE
+  /// 🟦 SMALL IMAGE (Style moderne)
   Widget _smallImage(String path, String title) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(25),
+      borderRadius: BorderRadius.circular(10), // Style moderne
       child: Stack(
         children: [
           Image.asset(
@@ -203,17 +194,8 @@ class CitiesPage extends StatelessWidget {
             height: 150,
             width: double.infinity,
             fit: BoxFit.cover,
-          ),
-
-          Container(
-            height: 150,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black45, Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ),
-            ),
+            color: Colors.black.withOpacity(0.2), // Filtre sombre moderne
+            colorBlendMode: BlendMode.darken,
           ),
 
           Positioned(

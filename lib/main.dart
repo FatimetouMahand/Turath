@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'cities_page.dart';
+import 'ghan_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -73,6 +74,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ],
               ),
+
 
               const SizedBox(height: 30),
 
@@ -187,6 +189,15 @@ class CustomCard extends StatelessWidget {
             ),
           );
         }
+
+            if (title == "لغن و الأمثلة الموريتانية") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const GhanPage(),
+        ),
+      );
+    }
       },
 
       child: Container(
