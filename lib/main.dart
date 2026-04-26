@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'cities_page.dart';
 import 'ghan_page.dart';
+import 'culture_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,8 +51,8 @@ class HomePage extends StatelessWidget {
               const SizedBox(height: 20),
 
               // 🔥 HERO
-              Column(
-                children: const [
+              const Column(
+                children: [
                   CircleAvatar(
                     radius: 35,
                     backgroundColor: Color(0xFFF5DED7),
@@ -87,7 +88,7 @@ class HomePage extends StatelessWidget {
                 mainAxisSpacing: 12,
                 childAspectRatio: 1,
 
-                children: [
+                children: const [
                   CustomCard(
                       icon: Icons.fort,
                       title: "المدن التاريخية"),
@@ -188,16 +189,21 @@ class CustomCard extends StatelessWidget {
               builder: (context) => const CitiesPage(),
             ),
           );
+        } else if (title == "لغن و الأمثلة الموريتانية") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const GhanPage(),
+            ),
+          );
+        } else if (title == "العادات والتقاليد") {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const CulturePage(),
+            ),
+          );
         }
-
-            if (title == "لغن و الأمثلة الموريتانية") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const GhanPage(),
-        ),
-      );
-    }
       },
 
       child: Container(
@@ -223,7 +229,6 @@ class CustomCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
           ],
         ),
       ),

@@ -13,7 +13,7 @@ class CitiesPage extends StatelessWidget {
         backgroundColor: const Color(0xFFFFF8F6),
         elevation: 0,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_forward, color: Color(0xFF442A22)),
+          icon: const Icon(Icons.arrow_back, color: Color(0xFF442A22)),
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
@@ -93,9 +93,9 @@ class CitiesPage extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 15),
+                    const SizedBox(height: 15),
 
-                    Text(
+                    const Text(
                       "تُعد المدن التاريخية في موريتانيا من أهم مراكز الحضارة الإسلامية في غرب إفريقيا.",
                       style: TextStyle(
                         color: Color(0xFF6B5B56),
@@ -103,9 +103,9 @@ class CitiesPage extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                    Text(
+                    const Text(
                       "شنقيط كانت مركزاً علمياً كبيراً، ووادان محطة للقوافل، وتيشيت مدينة تجارية، وولاتة معروفة بزخارفها المعمارية.",
                       style: TextStyle(
                         color: Color(0xFF6B5B56),
@@ -113,9 +113,9 @@ class CitiesPage extends StatelessWidget {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-                    Text(
+                    const Text(
                       "هذه المدن تمثل تراثاً إنسانياً عظيماً وتعكس تاريخ الصحراء وثقافتها.",
                       style: TextStyle(
                         color: Color(0xFF6B5B56),
@@ -134,24 +134,7 @@ class CitiesPage extends StatelessWidget {
     );
   }
 
-  /// 🔘 FILTER
-  Widget _filter(String text, bool active) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      decoration: BoxDecoration(
-        color: active ? const Color(0xFF442A22) : const Color(0xFFE9E1DF),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: active ? Colors.white : Colors.black54,
-        ),
-      ),
-    );
-  }
-
-  /// 🟫 BIG IMAGE (Style moderne)
+  ///  BIG IMAGE (Style moderne)
   Widget _bigImage(String path, String title) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10), // Style moderne
