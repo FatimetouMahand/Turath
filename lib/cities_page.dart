@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'models/favorite_model.dart';
+import 'widgets/favorite_button.dart';
 
 class CitiesPage extends StatelessWidget {
   const CitiesPage({super.key});
@@ -8,7 +10,6 @@ class CitiesPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8F6),
 
-      // 🔝 APP BAR
       appBar: AppBar(
         backgroundColor: const Color(0xFFFFF8F6),
         elevation: 0,
@@ -19,215 +20,187 @@ class CitiesPage extends StatelessWidget {
         title: const Text(
           "المدن التاريخية",
           style: TextStyle(
-             color: Color(0xFF6B5B56),
-             height: 1.6,
+            color: Color(0xFF6B5B56),
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
           ),
         ),
         centerTitle: true,
       ),
 
-      // ✅ SCROLL FIXED
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-
-              
-
-              /// 🟫 BIG IMAGE (شنقيط)
-              _bigImage(
-                "assets/images/chinguetti.jpeg",
-                "شنقيط",
-              ),
-
-              const SizedBox(height: 16),
-
-              /// 🟦 SMALL IMAGES
-              Row(
-                children: [
-                  Expanded(
-                    child: _smallImage(
-                      "assets/images/ouadane.jpeg",
-                      "وادان",
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: _smallImage(
-                      "assets/images/tichitt.jpeg",
-                      "تيشيت",
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 16),
-
-              /// 🟫 BIG IMAGE (ولاتة)
-              _bigImage(
-                "assets/images/oualata.jpeg",
-                "ولاتة",
-              ),
-
-              const SizedBox(height: 30),
-
-              /// 📄 DESCRIPTION
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFF4ECEA),
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: const [
-                    Text(
-                      "📜 المدن التاريخية الموريتانية",
-                      style: TextStyle(
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF442A22),
-                      ),
-                    ),
-
-                    SizedBox(height: 15),
-
-                    Text(
-                      "تُعد المدن التاريخية الأربع في موريتانيا، وهي شنقيط ووادان وتيشيت وولاتة، من أهم الشواهد على عراقة الحضارة الإسلامية في الصحراء الكبرى، وقد صُنّفت ضمن التراث العالمي لما لعبته من دور علمي وتجاري وثقافي عبر القرون.",
-                      style: TextStyle(
-                        color: Color(0xFF6B5B56),
-                        height: 1.6,
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-
-                    Text(
-                      "شنقيط تُعتبر من أقدم هذه المدن، حيث يعود تاريخها إلى القرن الثامن الميلادي تقريبًا، وكانت مركزًا علميًا ودينيًا مهمًا، وارتبط اسمها بالعلماء والمخطوطات، حتى أصبحت رمزًا للثقافة الإسلامية في المنطقة . أما وادان فقد ازدهرت في القرن السادس الهجري، وكانت محطة رئيسية للقوافل التجارية في الصحراء، ومركزًا للعلم والتبادل الثقافي بين شمال إفريقيا وغربها",
-                      
-                      style: TextStyle(
-                        color: Color(0xFF6B5B56),
-                        height: 1.6,
-                      ),
-                    ),
-
-                    SizedBox(height: 10),
-
-                    Text(
-                      ". أما ولاتة فقد تأسست سنة 1224م، وكانت منارة علمية وثقافية كبرى، وموطنًا للعلماء، كما شكلت محطة مهمة في طرق القوافل الصحراوية، واشتهرت بازدهارها العلمي والديني .بينما تُعد تيشيت من أقدم المدن عمرانًا، إذ يرجع تأسيسها إلى القرن الثاني عشر الميلادي تقريبًا، وقد عرفت بدورها التجاري والعلمي، وكانت من المدن التي حافظت على طابعها المعماري الصحراوي عبر الزمن",
-                      style: TextStyle(
-                        color: Color(0xFF6B5B56),
-                        height: 1.6,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 40),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  /// 🔘 FILTER
-  Widget _filter(String text, bool active) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 10),
-      decoration: BoxDecoration(
-        color: active ? const Color(0xFF442A22) : const Color(0xFFE9E1DF),
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(
-          color: active ? Colors.white : Colors.black54,
-        ),
-      ),
-    );
-  }
-
-  /// 🟫 BIG IMAGE
-  Widget _bigImage(String path, String title) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(30),
-      child: Stack(
+      body: ListView(
+        padding: const EdgeInsets.all(16),
         children: [
-          Image.asset(
-            path,
-            height: 250,
-            width: double.infinity,
-            fit: BoxFit.cover,
+
+          _modernCityCard(
+            image: "assets/images/chinguetti.jpeg",
+            title: "شنقيط",
+            description:
+                "مدينة شنقيط تعتبر من أعرق المدن التاريخية في موريتانيا، تأسست منذ قرون طويلة في قلب الصحراء الكبرى. "
+                "اشتهرت بأنها مركز علمي وديني مهم، حيث كانت تضم مكتبات كبيرة ومخطوطات نادرة. "
+                "كما كانت محطة أساسية للحجاج والقوافل التجارية القادمة من إفريقيا نحو الحجاز.",
           ),
 
-          Container(
-            height: 250,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black45, Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ),
-            ),
+          _modernCityCard(
+            image: "assets/images/Ouadane.jpeg",
+            title: "وادان",
+            description:
+                "وادان مدينة صحراوية قديمة ازدهرت كمركز تجاري بين شمال وغرب إفريقيا. "
+                "كانت ملتقى للقوافل التجارية ومركزًا لتبادل الذهب والملح والكتب العلمية. "
+                "كما لعبت دورًا كبيرًا في نشر العلم والدين في المنطقة.",
           ),
 
-          Positioned(
-            bottom: 16,
-            right: 16,
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          )
+          _modernCityCard(
+            image: "assets/images/Tichitt.jpeg",
+            title: "تيشيت",
+            description:
+                "تيشيت من أقدم المدن الموريتانية، تتميز بطابعها المعماري الفريد المبني من الطين. "
+                "كانت مدينة علم وتجارة، واحتفظت بطابعها التقليدي عبر الزمن رغم الظروف الصحراوية القاسية.",
+          ),
+
+          _modernCityCard(
+            image: "assets/images/Oualata.jpeg",
+            title: "ولاتة",
+            description:
+                "ولاتة تُعد من أهم المدن العلمية القديمة، وكانت مركزًا كبيرًا للعلماء والفقهاء. "
+                "اشتهرت برسوماتها الجدارية الجميلة وطرقها التجارية التي تربط الصحراء بالمدن الكبرى في إفريقيا.",
+          ),
+
+          const SizedBox(height: 20),
         ],
       ),
     );
   }
 
-  /// 🟦 SMALL IMAGE
-  Widget _smallImage(String path, String title) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(25),
-      child: Stack(
+  /// ⭐ MODERN PREMIUM CARD DESIGN
+  Widget _modernCityCard({
+    required String image,
+    required String title,
+    required String description,
+  }) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 18),
+
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(28),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.asset(
-            path,
-            height: 150,
-            width: double.infinity,
-            fit: BoxFit.cover,
-          ),
 
-          Container(
-            height: 150,
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.black45, Colors.transparent],
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-              ),
+          /// IMAGE HERO (CLEAN + MODERN OVERLAY)
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(
+              top: Radius.circular(28),
+            ),
+            child: Stack(
+              children: [
+
+                Image.asset(
+                  image,
+                  height: 210,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                ),
+
+                /// SOFT DARK GRADIENT
+                Container(
+                  height: 210,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.transparent,
+                        Colors.black.withOpacity(0.55),
+                      ],
+                    ),
+                  ),
+                ),
+
+                /// TITLE BADGE (MODERN GLASS STYLE)
+                Positioned(
+                  bottom: 15,
+                  right: 15,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.18),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.white.withOpacity(0.25),
+                      ),
+                    ),
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: FavoriteButton(
+                    item: FavoriteItem(
+                      image: image,
+                      title: title,
+                      description: description,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
 
-          Positioned(
-            bottom: 10,
-            right: 10,
+          /// CONTENT
+          Padding(
+            padding: const EdgeInsets.fromLTRB(14, 14, 14, 10),
             child: Text(
-              title,
+              description,
+              textAlign: TextAlign.justify,
               style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+                color: Color(0xFF6B5B56),
+                fontSize: 14,
+                height: 1.6,
+                letterSpacing: 0.2,
               ),
             ),
-          )
+          ),
+
+          /// SMALL DECORATIVE LINE (MODERN TOUCH)
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Container(
+              height: 1,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Colors.transparent,
+                    const Color(0xFFE9E1DF),
+                    Colors.transparent,
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
         ],
       ),
     );

@@ -3,7 +3,7 @@ import 'cities_page.dart';
 import 'poetry_page.dart';
 import 'tools_page.dart';
 import 'culture_page.dart';
-
+import 'favorites_page.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -51,7 +51,7 @@ class HomePage extends StatelessWidget {
             children: [
               const SizedBox(height: 20),
 
-              // 🔥 HERO
+              //  HERO
               Column(
                 children: const [
                   CircleAvatar(
@@ -79,7 +79,7 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // 🔲 GRID (❗ بدون const)
+              //  GRID ( بدون const)
               GridView.count(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
@@ -106,13 +106,13 @@ class HomePage extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              // 🖼️ IMAGE
+              //  IMAGE
               ClipRRect(
   borderRadius: BorderRadius.circular(20),
   child: Stack(
     children: [
 
-      /// 🖼️ IMAGE
+      ///  IMAGE
       Image.network(
         "https://lh3.googleusercontent.com/aida-public/AB6AXuD95W-4_wxe9Z9YqDGl5-GlQEMy5PUTFoZAQt_gEnvjObDhu7LufOgYlzOex-w-YBFvaq12SSd6AfuaJT3rMbl-jg_9wJSTwHSvUpCIi0t4jDSNP3BeWpA9mfafCsrBVKcJkTQ8BcAPAduWV8sUqSGOIRkVI2w5nDN44kih50qgvPbnTfCRhWok7aKXl-AC1eCozovHYwn_OxdBDXUo45a5luA64D5oD5c_XQ1VouCGzIe0bxGGn1UVfi8jyX5sZ1VrgUwpWdbg-FA",
         height: 200,
@@ -120,7 +120,6 @@ class HomePage extends StatelessWidget {
         fit: BoxFit.cover,
       ),
 
-      /// 🌫️ GRADIENT (باش يبان النص)
       Container(
         height: 200,
         decoration: const BoxDecoration(
@@ -132,7 +131,7 @@ class HomePage extends StatelessWidget {
         ),
       ),
 
-      /// ✨ TEXT فوق الصورة
+     
       const Positioned(
         bottom: 20,
         right: 20,
@@ -157,21 +156,26 @@ class HomePage extends StatelessWidget {
       ),
 
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: const Color(0xFF442A22),
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: "الرئيسية"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.category), label: "الفئات"),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.favorite), label: "المفضلة"),
-        ],
-      ),
+  currentIndex: 0,
+  onTap: (index) {
+    if (index == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (_) => const FavoritesPage()),
+      );
+    }
+  },
+  items: const [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: "الرئيسية"),
+   
+    BottomNavigationBarItem(icon: Icon(Icons.favorite), label: "المفضلة"),
+  ],
+),
     );
   }
 }
 
-// 🔲 CARD (✅ تم إصلاحه)
+
 class CustomCard extends StatelessWidget {
   final IconData icon;
   final String title;
@@ -203,7 +207,7 @@ class CustomCard extends StatelessWidget {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const ToolsPage(),
+      builder: (context) => const OldToolsPage(),
     ),
   );
 } 
