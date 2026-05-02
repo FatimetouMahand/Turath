@@ -131,13 +131,27 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     padding: const EdgeInsets.only(right: 20),
                     alignment: Alignment.centerRight,
                     decoration: BoxDecoration(
-                      color: Colors.red,
+                      color: Colors.red.shade400,
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                      size: 30,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                        Text(
+                          "حذف",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(
+                          Icons.delete,
+                          color: Colors.white,
+                          size: 28,
+                        ),
+                      ],
                     ),
                   ),
 
