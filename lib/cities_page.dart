@@ -1,6 +1,52 @@
 import 'package:flutter/material.dart';
 import 'models/favorite_model.dart';
 import 'widgets/favorite_button.dart';
+import 'l10n/locale_provider.dart';
+
+/// Tableau de traduction des textes de la page des villes historiques.
+const Map<String, Map<String, String>> citiesStrings = {
+  'page_title': {'ar': 'المدن التاريخية', 'fr': 'Villes historiques'},
+  'chinguetti_title': {'ar': 'شنقيط', 'fr': 'Chinguetti'},
+  'chinguetti_description': {
+    'ar':
+        'مدينة شنقيط تعتبر من أعرق المدن التاريخية في موريتانيا، تأسست منذ قرون طويلة في قلب الصحراء الكبرى. '
+        'اشتهرت بأنها مركز علمي وديني مهم، حيث كانت تضم مكتبات كبيرة ومخطوطات نادرة. '
+        'كما كانت محطة أساسية للحجاج والقوافل التجارية القادمة من إفريقيا نحو الحجاز.',
+    'fr':
+        'La ville de Chinguetti est l\'une des villes historiques les plus anciennes de Mauritanie, fondée il y a de nombreux siècles au cœur du grand désert. '
+        'Elle était réputée pour être un important centre scientifique et religieux, abritant de grandes bibliothèques et des manuscrits rares. '
+        'Elle était également une étape essentielle pour les pèlerins et les caravanes commerciales venant d\'Afrique vers le Hijaz.',
+  },
+  'ouadane_title': {'ar': 'وادان', 'fr': 'Ouadane'},
+  'ouadane_description': {
+    'ar':
+        'وادان مدينة صحراوية قديمة ازدهرت كمركز تجاري بين شمال وغرب إفريقيا. '
+        'كانت ملتقى للقوافل التجارية ومركزًا لتبادل الذهب والملح والكتب العلمية. '
+        'كما لعبت دورًا كبيرًا في نشر العلم والدين في المنطقة.',
+    'fr':
+        'Ouadane est une ancienne ville désertique qui a prospéré en tant que centre commercial entre l\'Afrique du Nord et l\'Afrique de l\'Ouest. '
+        'Elle était un point de rencontre pour les caravanes commerciales et un centre d\'échange d\'or, de sel et de livres scientifiques. '
+        'Elle a également joué un grand rôle dans la diffusion de la science et de la religion dans la région.',
+  },
+  'tichitt_title': {'ar': 'تيشيت', 'fr': 'Tichitt'},
+  'tichitt_description': {
+    'ar':
+        'تيشيت من أقدم المدن الموريتانية، تتميز بطابعها المعماري الفريد المبني من الطين. '
+        'كانت مدينة علم وتجارة، واحتفظت بطابعها التقليدي عبر الزمن رغم الظروف الصحراوية القاسية.',
+    'fr':
+        'Tichitt est l\'une des plus anciennes villes mauritaniennes, caractérisée par son architecture unique construite en terre. '
+        'C\'était une ville de science et de commerce, qui a conservé son caractère traditionnel à travers le temps malgré les conditions désertiques difficiles.',
+  },
+  'oualata_title': {'ar': 'ولاتة', 'fr': 'Oualata'},
+  'oualata_description': {
+    'ar':
+        'ولاتة تُعد من أهم المدن العلمية القديمة، وكانت مركزًا كبيرًا للعلماء والفقهاء. '
+        'اشتهرت برسوماتها الجدارية الجميلة وطرقها التجارية التي تربط الصحراء بالمدن الكبرى في إفريقيا.',
+    'fr':
+        'Oualata est considérée comme l\'une des plus importantes villes scientifiques anciennes, et était un grand centre pour les savants et les juristes. '
+        'Elle était réputée pour ses belles peintures murales et ses routes commerciales reliant le désert aux grandes villes d\'Afrique.',
+  },
+};
 
 class CitiesPage extends StatelessWidget {
   const CitiesPage({super.key});
@@ -17,9 +63,9 @@ class CitiesPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_forward, color: Color(0xFF442A22)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          "المدن التاريخية",
-          style: TextStyle(
+        title: Text(
+          context.tr(citiesStrings, 'page_title'),
+          style: const TextStyle(
             color: Color(0xFF6B5B56),
             fontWeight: FontWeight.bold,
             fontSize: 20,
@@ -33,37 +79,31 @@ class CitiesPage extends StatelessWidget {
         children: [
 
           _modernCityCard(
+            context: context,
             image: "assets/images/chinguetti.jpeg",
-            title: "شنقيط",
-            description:
-                "مدينة شنقيط تعتبر من أعرق المدن التاريخية في موريتانيا، تأسست منذ قرون طويلة في قلب الصحراء الكبرى. "
-                "اشتهرت بأنها مركز علمي وديني مهم، حيث كانت تضم مكتبات كبيرة ومخطوطات نادرة. "
-                "كما كانت محطة أساسية للحجاج والقوافل التجارية القادمة من إفريقيا نحو الحجاز.",
+            title: context.tr(citiesStrings, 'chinguetti_title'),
+            description: context.tr(citiesStrings, 'chinguetti_description'),
           ),
 
           _modernCityCard(
+            context: context,
             image: "assets/images/Ouadane.jpeg",
-            title: "وادان",
-            description:
-                "وادان مدينة صحراوية قديمة ازدهرت كمركز تجاري بين شمال وغرب إفريقيا. "
-                "كانت ملتقى للقوافل التجارية ومركزًا لتبادل الذهب والملح والكتب العلمية. "
-                "كما لعبت دورًا كبيرًا في نشر العلم والدين في المنطقة.",
+            title: context.tr(citiesStrings, 'ouadane_title'),
+            description: context.tr(citiesStrings, 'ouadane_description'),
           ),
 
           _modernCityCard(
+            context: context,
             image: "assets/images/Tichitt.jpeg",
-            title: "تيشيت",
-            description:
-                "تيشيت من أقدم المدن الموريتانية، تتميز بطابعها المعماري الفريد المبني من الطين. "
-                "كانت مدينة علم وتجارة، واحتفظت بطابعها التقليدي عبر الزمن رغم الظروف الصحراوية القاسية.",
+            title: context.tr(citiesStrings, 'tichitt_title'),
+            description: context.tr(citiesStrings, 'tichitt_description'),
           ),
 
           _modernCityCard(
+            context: context,
             image: "assets/images/Oualata.jpeg",
-            title: "ولاتة",
-            description:
-                "ولاتة تُعد من أهم المدن العلمية القديمة، وكانت مركزًا كبيرًا للعلماء والفقهاء. "
-                "اشتهرت برسوماتها الجدارية الجميلة وطرقها التجارية التي تربط الصحراء بالمدن الكبرى في إفريقيا.",
+            title: context.tr(citiesStrings, 'oualata_title'),
+            description: context.tr(citiesStrings, 'oualata_description'),
           ),
 
           const SizedBox(height: 20),
@@ -74,6 +114,7 @@ class CitiesPage extends StatelessWidget {
 
   /// ⭐ MODERN PREMIUM CARD DESIGN
   Widget _modernCityCard({
+    required BuildContext context,
     required String image,
     required String title,
     required String description,

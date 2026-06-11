@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'patrimoine_page.dart';
 import 'tourism_page.dart';
 import 'favorites_page.dart';
 import 'culture_page.dart';
+import 'l10n/locale_provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,22 +16,61 @@ void main() {
     ),
   );
 
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => LocaleProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
+
+/// Tableau de traduction des textes de la page d'accueil.
+const Map<String, Map<String, String>> mainStrings = {
+  'welcome': {'ar': 'مرحباً', 'fr': 'Bienvenue'},
+  'discover_mauritania': {'ar': 'اكتشف موريتانيا', 'fr': 'Découvrir la Mauritanie'},
+  'nav_home': {'ar': 'الرئيسية', 'fr': 'Accueil'},
+  'nav_patrimoine': {'ar': 'التراث', 'fr': 'Patrimoine'},
+  'nav_tourism': {'ar': 'السياحة', 'fr': 'Tourisme'},
+  'nav_favorites': {'ar': 'المفضلة', 'fr': 'Favoris'},
+  'nav_culture': {'ar': 'الثقافة', 'fr': 'Culture'},
+  'search_hint': {'ar': 'ابحث عن الأماكن...', 'fr': 'Rechercher un lieu...'},
+  'featured': {'ar': '✨ مميز', 'fr': '✨ Coup de cœur'},
+  'hero_title': {'ar': 'رحلة عبر الصحراء\nالموريتانية', 'fr': 'Un voyage à travers\nle désert mauritanien'},
+  'hero_location': {'ar': 'شنقيط، موريتانيا', 'fr': 'Chinguetti, Mauritanie'},
+  'discover': {'ar': 'اكتشف', 'fr': 'Découvrir'},
+  'sections': {'ar': 'الأقسام', 'fr': 'Sections'},
+  'see_all': {'ar': 'عرض الكل', 'fr': 'Voir tout'},
+  'famous_places': {'ar': 'أماكن مشهورة', 'fr': 'Lieux célèbres'},
+  'place_chinguetti': {'ar': 'شنقيط', 'fr': 'Chinguetti'},
+  'place_ouadane': {'ar': 'وادان', 'fr': 'Ouadane'},
+  'place_oualata': {'ar': 'ولاتة', 'fr': 'Oualata'},
+  'place_tichitt': {'ar': 'تيشيت', 'fr': 'Tichitt'},
+  'region_adrar': {'ar': 'ولاية آدرار', 'fr': 'Région de l’Adrar'},
+  'region_hodh_chargui': {'ar': 'ولاية الحوض الشرقي', 'fr': 'Région du Hodh Ech Chargui'},
+  'region_tagant': {'ar': 'ولاية تكانت', 'fr': 'Région du Tagant'},
+};
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final locale = context.watch<LocaleProvider>();
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "Turath Mauritania",
+      locale: locale.locale,
       theme: ThemeData(
         useMaterial3: true,
         fontFamily: 'Roboto',
         scaffoldBackgroundColor: const Color(0xFFFFF8F6),
       ),
+      builder: (context, child) {
+        return Directionality(
+          textDirection: locale.textDirection,
+          child: child!,
+        );
+      },
       home: const MainHomePage(),
     );
   }
@@ -193,10 +234,10 @@ class _MainHomePageState extends State<MainHomePage>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _navItem(Icons.home_rounded, "الرئيسية", 0),
-              _navItem(Icons.account_balance_rounded, "التراث", 1),
-              _navItem(Icons.explore_rounded, "السياحة", 2),
-              _navItem(Icons.favorite_rounded, "المفضلة", 3),
+              _navItem(Icons.home_rounded, context.tr(mainStrings, 'nav_home'), 0),
+              _navItem(Icons.account_balance_rounded, context.tr(mainStrings, 'nav_patrimoine'), 1),
+              _navItem(Icons.explore_rounded, context.tr(mainStrings, 'nav_tourism'), 2),
+              _navItem(Icons.favorite_rounded, context.tr(mainStrings, 'nav_favorites'), 3),
             ],
           ),
         ),
@@ -324,73 +365,123 @@ class _MainHomePageState extends State<MainHomePage>
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Left: Welcome text
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: const Color(0xFFF5DED7),
-                    ),
-                    child: const Row(
-                      children: [
-                        Text("", style: TextStyle(fontSize: 14)),
-                        SizedBox(width: 4),
-                        Text(
-                          "مرحباً",
-                          style: TextStyle(
-                            color: Color(0xFF442A22),
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: const Color(0xFFF5DED7),
+                      ),
+                      child: Row(
+                        children: [
+                          const Text("", style: TextStyle(fontSize: 14)),
+                          const SizedBox(width: 4),
+                          Text(
+                            context.tr(mainStrings, 'welcome'),
+                            style: const TextStyle(
+                              color: Color(0xFF442A22),
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  context.tr(mainStrings, 'discover_mauritania'),
+                  style: const TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Color(0xFF442A22),
+                    height: 1.2,
                   ),
-                ],
-              ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 12),
+
+          // Right: Language toggle + Avatar (stacked vertically to save width)
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              _buildLanguageToggle(),
               const SizedBox(height: 10),
-              const Text(
-                "اكتشف موريتانيا",
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xFF442A22),
-                  height: 1.2,
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: const Color(0xFFF5DED7),
+                    width: 2.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFF442A22).withValues(alpha: 0.12),
+                      blurRadius: 20,
+                      spreadRadius: 2,
+                    ),
+                  ],
+                ),
+                child: const CircleAvatar(
+                  radius: 26,
+                  backgroundImage: AssetImage("assets/images/sa7ra.jpeg"),
                 ),
               ),
             ],
           ),
-
-          // Right: Avatar with glow
-          Container(
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: const Color(0xFFF5DED7),
-                width: 2.5,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: const Color(0xFF442A22).withValues(alpha: 0.12),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: const CircleAvatar(
-              radius: 26,
-              backgroundImage: AssetImage("assets/images/sa7ra.jpeg"),
-            ),
-          ),
         ],
+      ),
+    );
+  }
+
+  // ─── LANGUAGE TOGGLE BUTTON ─────────────────────────────
+  Widget _buildLanguageToggle() {
+    final locale = context.watch<LocaleProvider>();
+    return GestureDetector(
+      onTap: () => context.read<LocaleProvider>().toggleLanguage(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: const Color(0xFFF5DED7),
+          boxShadow: [
+            BoxShadow(
+              color: const Color(0xFF442A22).withValues(alpha: 0.1),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.language_rounded, color: Color(0xFF442A22), size: 18),
+            const SizedBox(width: 6),
+            Text(
+              locale.isArabic ? "FR" : "AR",
+              style: const TextStyle(
+                color: Color(0xFF442A22),
+                fontSize: 13,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -417,7 +508,7 @@ class _MainHomePageState extends State<MainHomePage>
         child: TextField(
           style: const TextStyle(color: Color(0xFF442A22), fontSize: 14),
           decoration: InputDecoration(
-            hintText: "ابحث عن الأماكن...",
+            hintText: context.tr(mainStrings, 'search_hint'),
             hintStyle: const TextStyle(
               color: Color(0xFF6B5B56),
               fontSize: 14,
@@ -495,9 +586,9 @@ class _MainHomePageState extends State<MainHomePage>
                           borderRadius: BorderRadius.circular(8),
                           color: const Color(0xFFF5DED7).withValues(alpha: 0.3),
                         ),
-                        child: const Text(
-                          "✨ مميز",
-                          style: TextStyle(
+                        child: Text(
+                          context.tr(mainStrings, 'featured'),
+                          style: const TextStyle(
                             color: Color(0xFFF5DED7),
                             fontSize: 11,
                             fontWeight: FontWeight.bold,
@@ -505,9 +596,9 @@ class _MainHomePageState extends State<MainHomePage>
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        "رحلة عبر الصحراء\nالموريتانية",
-                        style: TextStyle(
+                      Text(
+                        context.tr(mainStrings, 'hero_title'),
+                        style: const TextStyle(
                           color: Colors.white,
                           fontSize: 22,
                           fontWeight: FontWeight.bold,
@@ -524,7 +615,7 @@ class _MainHomePageState extends State<MainHomePage>
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            "شنقيط، موريتانيا",
+                            context.tr(mainStrings, 'hero_location'),
                             style: TextStyle(
                               color: Colors.white.withValues(alpha: 0.8),
                               fontSize: 12,
@@ -543,19 +634,19 @@ class _MainHomePageState extends State<MainHomePage>
                                 ],
                               ),
                             ),
-                            child: const Row(
+                            child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  "اكتشف",
-                                  style: TextStyle(
+                                  context.tr(mainStrings, 'discover'),
+                                  style: const TextStyle(
                                     color: Color(0xFF442A22),
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                SizedBox(width: 4),
-                                Icon(
+                                const SizedBox(width: 4),
+                                const Icon(
                                   Icons.arrow_forward_rounded,
                                   color: Color(0xFF442A22),
                                   size: 14,
@@ -587,9 +678,9 @@ class _MainHomePageState extends State<MainHomePage>
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "الأقسام",
-                style: TextStyle(
+              Text(
+                context.tr(mainStrings, 'sections'),
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF442A22),
@@ -602,9 +693,9 @@ class _MainHomePageState extends State<MainHomePage>
                   borderRadius: BorderRadius.circular(12),
                   color: const Color(0xFFF5DED7),
                 ),
-                child: const Text(
-                  "عرض الكل",
-                  style: TextStyle(
+                child: Text(
+                  context.tr(mainStrings, 'see_all'),
+                  style: const TextStyle(
                     color: Color(0xFF442A22),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,
@@ -621,7 +712,7 @@ class _MainHomePageState extends State<MainHomePage>
               Expanded(
                 child: _buildStaggeredCategory(
                   icon: Icons.explore_rounded,
-                  title: "السياحة",
+                  title: context.tr(mainStrings, 'nav_tourism'),
                   gradient: const [Color(0xFF442A22), Color(0xFF5C3A30)],
                   iconBgColor: const Color(0xFFF5DED7),
                   delay: 0,
@@ -635,7 +726,7 @@ class _MainHomePageState extends State<MainHomePage>
               Expanded(
                 child: _buildStaggeredCategory(
                   icon: Icons.account_balance_rounded,
-                  title: "التراث",
+                  title: context.tr(mainStrings, 'nav_patrimoine'),
                   gradient: const [Color(0xFFF5DED7), Color(0xFFE8C8B8)],
                   iconBgColor: Colors.white,
                   textDark: true,
@@ -654,7 +745,7 @@ class _MainHomePageState extends State<MainHomePage>
               Expanded(
                 child: _buildStaggeredCategory(
                   icon: Icons.favorite_rounded,
-                  title: "المفضلة",
+                  title: context.tr(mainStrings, 'nav_favorites'),
                   gradient: const [Color(0xFFF4ECEA), Color(0xFFE8DCD8)],
                   iconBgColor: Colors.white,
                   textDark: true,
@@ -669,7 +760,7 @@ class _MainHomePageState extends State<MainHomePage>
               Expanded(
                 child: _buildStaggeredCategory(
                   icon: Icons.groups_rounded,
-                  title: "الثقافة",
+                  title: context.tr(mainStrings, 'nav_culture'),
                   gradient: const [Color(0xFF5C3A30), Color(0xFF442A22)],
                   iconBgColor: const Color(0xFFF5DED7),
                   delay: 3,
@@ -795,27 +886,27 @@ class _MainHomePageState extends State<MainHomePage>
   Widget _buildFamousPlaces() {
     final places = [
       {
-        "name": "شنقيط",
+        "name": context.tr(mainStrings, 'place_chinguetti'),
         "image": "assets/images/chinguetti.jpeg",
-        "location": "ولاية آدرار",
+        "location": context.tr(mainStrings, 'region_adrar'),
         "rating": "4.8",
       },
       {
-        "name": "وادان",
+        "name": context.tr(mainStrings, 'place_ouadane'),
         "image": "assets/images/Ouadane.jpeg",
-        "location": "ولاية آدرار",
+        "location": context.tr(mainStrings, 'region_adrar'),
         "rating": "4.6",
       },
       {
-        "name": "ولاتة",
+        "name": context.tr(mainStrings, 'place_oualata'),
         "image": "assets/images/Oualata.jpeg",
-        "location": "ولاية الحوض الشرقي",
+        "location": context.tr(mainStrings, 'region_hodh_chargui'),
         "rating": "4.7",
       },
       {
-        "name": "تيشيت",
+        "name": context.tr(mainStrings, 'place_tichitt'),
         "image": "assets/images/Tichitt.jpeg",
-        "location": "ولاية تكانت",
+        "location": context.tr(mainStrings, 'region_tagant'),
         "rating": "4.5",
       },
     ];
@@ -828,9 +919,9 @@ class _MainHomePageState extends State<MainHomePage>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                "أماكن مشهورة",
-                style: TextStyle(
+              Text(
+                context.tr(mainStrings, 'famous_places'),
+                style: const TextStyle(
                   fontSize: 22,
                   fontWeight: FontWeight.bold,
                   color: Color(0xFF442A22),
@@ -843,9 +934,9 @@ class _MainHomePageState extends State<MainHomePage>
                   borderRadius: BorderRadius.circular(12),
                   color: const Color(0xFFF5DED7),
                 ),
-                child: const Text(
-                  "عرض الكل",
-                  style: TextStyle(
+                child: Text(
+                  context.tr(mainStrings, 'see_all'),
+                  style: const TextStyle(
                     color: Color(0xFF442A22),
                     fontSize: 12,
                     fontWeight: FontWeight.w500,

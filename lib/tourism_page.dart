@@ -3,6 +3,102 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:math';
 import 'dart:ui';
 import 'models/destination_model.dart';
+import 'l10n/locale_provider.dart';
+
+const Map<String, Map<String, String>> tourismStrings = {
+  'destination_of_month': {
+    'ar': '✨ الوجهة المفضلة',
+    'fr': '✨ Destination préférée',
+  },
+  'discover_mauritania': {
+    'ar': 'اكتشف موريتانيا',
+    'fr': 'Découvrez la Mauritanie',
+  },
+  'hero_subtitle': {
+    'ar': 'أماكن طبيعية وتاريخية خلابة تنتظرك',
+    'fr': 'Des lieux naturels et historiques magnifiques vous attendent',
+  },
+  'start_journey': {
+    'ar': 'ابدأ الرحلة',
+    'fr': 'Commencer le voyage',
+  },
+  'search_destination_hint': {
+    'ar': 'ابحث عن وجهة...',
+    'fr': 'Rechercher une destination...',
+  },
+  'category_all': {
+    'ar': 'الكل',
+    'fr': 'Tout',
+  },
+  'category_history': {
+    'ar': 'تاريخ',
+    'fr': 'Histoire',
+  },
+  'category_nature': {
+    'ar': 'طبيعة',
+    'fr': 'Nature',
+  },
+  'category_beach': {
+    'ar': 'شاطئ',
+    'fr': 'Plage',
+  },
+  'view_all': {
+    'ar': 'عرض الكل',
+    'fr': 'Voir tout',
+  },
+  'visits_suffix': {
+    'ar': 'زيارة',
+    'fr': 'visites',
+  },
+  'tap_for_more_info': {
+    'ar': 'اضغط لمزيد من المعلومات',
+    'fr': 'Appuyez pour plus d\'informations',
+  },
+  'tap_again_full_details': {
+    'ar': 'اضغط مجددا لمشاهدة التفاصيل الكاملة',
+    'fr': 'Appuyez à nouveau pour voir tous les détails',
+  },
+  'type_label': {
+    'ar': 'النوع',
+    'fr': 'Type',
+  },
+  'description_label': {
+    'ar': 'الوصف',
+    'fr': 'Description',
+  },
+  'get_directions': {
+    'ar': 'الحصول على الاتجاهات',
+    'fr': 'Obtenir l\'itinéraire',
+  },
+  'share': {
+    'ar': 'مشاركة',
+    'fr': 'Partager',
+  },
+  'tourism_title': {
+    'ar': 'السياحة',
+    'fr': 'Tourisme',
+  },
+  'historical_sites': {
+    'ar': 'المواقع التاريخية',
+    'fr': 'Sites historiques',
+  },
+  'natural_wonders': {
+    'ar': 'عجائب الطبيعة',
+    'fr': 'Merveilles naturelles',
+  },
+  'beaches': {
+    'ar': 'الشواطئ',
+    'fr': 'Plages',
+  },
+  'hotels': {
+    'ar': 'الفنادق',
+    'fr': 'Hôtels',
+  },
+  'restaurants': {
+    'ar': 'المطاعم',
+    'fr': 'Restaurants',
+  },
+};
 
 class TourismPage extends StatefulWidget {
   const TourismPage({super.key});
@@ -102,31 +198,31 @@ class _TourismPageState extends State<TourismPage>
                 _buildCategoryChips(context),
                 _buildDestinationSection(
                   context,
-                  'المواقع التاريخية',
+                  context.tr(tourismStrings, 'historical_sites'),
                   historicalSites,
                   Icons.account_balance,
                 ),
                 _buildDestinationSection(
                   context,
-                  'عجائب الطبيعة',
+                  context.tr(tourismStrings, 'natural_wonders'),
                   naturalWonders,
                   Icons.terrain,
                 ),
                 _buildDestinationSection(
                   context,
-                  'الشواطئ',
+                  context.tr(tourismStrings, 'beaches'),
                   beaches,
                   Icons.beach_access,
                 ),
                 _buildDestinationSection(
                   context,
-                  'الفنادق',
+                  context.tr(tourismStrings, 'hotels'),
                   hotels,
                   Icons.hotel,
                 ),
                 _buildDestinationSection(
                   context,
-                  'المطاعم',
+                  context.tr(tourismStrings, 'restaurants'),
                   restaurants,
                   Icons.restaurant,
                 ),
@@ -147,9 +243,9 @@ class _TourismPageState extends State<TourismPage>
       expandedHeight: 120,
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),
-        title: const Text(
-          'السياحة',
-          style: TextStyle(
+        title: Text(
+          context.tr(tourismStrings, 'tourism_title'),
+          style: const TextStyle(
             fontSize: 28,
             fontWeight: FontWeight.bold,
             color: Color(0xFF3B2A24),
@@ -304,9 +400,9 @@ class _TourismPageState extends State<TourismPage>
                   color: const Color(0xFFFF6B6B),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Text(
-                  '✨ الوجهة المفضلة',
-                  style: TextStyle(
+                child: Text(
+                  context.tr(tourismStrings, 'destination_of_month'),
+                  style: const TextStyle(
                     color: Colors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.bold,
@@ -387,9 +483,9 @@ class _TourismPageState extends State<TourismPage>
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'اكتشف موريتانيا',
-                    style: TextStyle(
+                  Text(
+                    context.tr(tourismStrings, 'discover_mauritania'),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
@@ -403,9 +499,9 @@ class _TourismPageState extends State<TourismPage>
                     ),
                   ),
                   const SizedBox(height: 12),
-                  const Text(
-                    'أماكن طبيعية وتاريخية خلابة تنتظرك',
-                    style: TextStyle(
+                  Text(
+                    context.tr(tourismStrings, 'hero_subtitle'),
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 14,
                       shadows: [
@@ -423,7 +519,7 @@ class _TourismPageState extends State<TourismPage>
                     child: FilledButton.icon(
                       onPressed: () {},
                       icon: const Icon(Icons.explore),
-                      label: const Text('ابدأ الرحلة'),
+                      label: Text(context.tr(tourismStrings, 'start_journey')),
                       style: FilledButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xFF3B2A24),
@@ -485,7 +581,7 @@ class _TourismPageState extends State<TourismPage>
         child: TextField(
           controller: _searchController,
           decoration: InputDecoration(
-            hintText: 'ابحث عن وجهة...',
+            hintText: context.tr(tourismStrings, 'search_destination_hint'),
             prefixIcon: const Icon(Icons.search, color: Color(0xFF7A604E)),
             suffixIcon: _searchController.text.isNotEmpty
                 ? GestureDetector(
@@ -521,10 +617,10 @@ class _TourismPageState extends State<TourismPage>
 
   Widget _buildCategoryChips(BuildContext context) {
     final categories = [
-      {'label': 'الكل', 'icon': Icons.apps},
-      {'label': 'تاريخ', 'icon': Icons.account_balance},
-      {'label': 'طبيعة', 'icon': Icons.terrain},
-      {'label': 'شاطئ', 'icon': Icons.beach_access},
+      {'label': context.tr(tourismStrings, 'category_all'), 'icon': Icons.apps},
+      {'label': context.tr(tourismStrings, 'category_history'), 'icon': Icons.account_balance},
+      {'label': context.tr(tourismStrings, 'category_nature'), 'icon': Icons.terrain},
+      {'label': context.tr(tourismStrings, 'category_beach'), 'icon': Icons.beach_access},
     ];
 
     return Padding(
@@ -595,9 +691,9 @@ class _TourismPageState extends State<TourismPage>
                     borderRadius: BorderRadius.circular(16),
                   ),
                 ),
-                child: const Text(
-                  'عرض الكل',
-                  style: TextStyle(
+                child: Text(
+                  context.tr(tourismStrings, 'view_all'),
+                  style: const TextStyle(
                     color: Color(0xFF3B2A24),
                     fontWeight: FontWeight.w600,
                   ),
@@ -773,7 +869,7 @@ class _TourismPageState extends State<TourismPage>
                                   color: Colors.white.withValues(alpha: 0.8)),
                               const SizedBox(width: 4),
                               Text(
-                                '${destination.visits} زيارة',
+                                '${destination.visits} ${context.tr(tourismStrings, 'visits_suffix')}',
                                 style: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.8),
                                   fontSize: 12,
@@ -804,7 +900,7 @@ class _TourismPageState extends State<TourismPage>
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  'اضغط لمزيد من المعلومات',
+                                  context.tr(tourismStrings, 'tap_for_more_info'),
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 11,
@@ -912,7 +1008,7 @@ class _TourismPageState extends State<TourismPage>
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  'اضغط مجددا لمشاهدة التفاصيل الكاملة',
+                                  context.tr(tourismStrings, 'tap_again_full_details'),
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white.withValues(alpha: 0.7),
@@ -1065,9 +1161,9 @@ class _TourismPageState extends State<TourismPage>
                       ],
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'النوع',
-                      style: TextStyle(
+                    Text(
+                      context.tr(tourismStrings, 'type_label'),
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF7A6B62),
@@ -1101,9 +1197,9 @@ class _TourismPageState extends State<TourismPage>
                           .toList(),
                     ),
                     const SizedBox(height: 20),
-                    const Text(
-                      'الوصف',
-                      style: TextStyle(
+                    Text(
+                      context.tr(tourismStrings, 'description_label'),
+                      style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                         color: Color(0xFF7A6B62),
@@ -1124,7 +1220,7 @@ class _TourismPageState extends State<TourismPage>
                       child: FilledButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.directions),
-                        label: const Text('الحصول على الاتجاهات'),
+                        label: Text(context.tr(tourismStrings, 'get_directions')),
                         style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xFF3B2A24),
                           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1137,7 +1233,7 @@ class _TourismPageState extends State<TourismPage>
                       child: OutlinedButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.share),
-                        label: const Text('مشاركة'),
+                        label: Text(context.tr(tourismStrings, 'share')),
                         style: OutlinedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           side: const BorderSide(color: Color(0xFF3B2A24)),

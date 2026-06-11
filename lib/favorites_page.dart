@@ -49,6 +49,14 @@
 import 'package:flutter/material.dart';
 import 'package:projet_devmobil/models/favorite_model.dart';
 import 'package:projet_devmobil/services/favorite_service.dart';
+import 'l10n/locale_provider.dart';
+
+const Map<String, Map<String, String>> favoritesStrings = {
+  'favorites_title': {'ar': 'المفضلة', 'fr': 'Favoris'},
+  'item_deleted': {'ar': 'تم حذف العنصر', 'fr': 'Élément supprimé'},
+  'no_items': {'ar': 'لا توجد عناصر ❤️', 'fr': 'Aucun élément ❤️'},
+  'delete': {'ar': 'حذف', 'fr': 'Supprimer'},
+};
 
 class FavoritesPage extends StatefulWidget {
   const FavoritesPage({super.key});
@@ -80,8 +88,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
     setState(() {});
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text("تم حذف العنصر"),
+      SnackBar(
+        content: Text(context.tr(favoritesStrings, 'item_deleted')),
         backgroundColor: Colors.brown,
       ),
     );
@@ -95,9 +103,9 @@ class _FavoritesPageState extends State<FavoritesPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFFFF8F6),
         elevation: 0,
-        title: const Text(
-          "المفضلة",
-          style: TextStyle(
+        title: Text(
+          context.tr(favoritesStrings, 'favorites_title'),
+          style: const TextStyle(
             color: Color(0xFF442A22),
             fontWeight: FontWeight.bold,
           ),
@@ -106,10 +114,10 @@ class _FavoritesPageState extends State<FavoritesPage> {
       ),
 
       body: items.isEmpty
-          ? const Center(
+          ? Center(
               child: Text(
-                "لا توجد عناصر ❤️",
-                style: TextStyle(fontSize: 18, color: Colors.grey),
+                context.tr(favoritesStrings, 'no_items'),
+                style: const TextStyle(fontSize: 18, color: Colors.grey),
               ),
             )
           : ListView.builder(
@@ -136,17 +144,17 @@ class _FavoritesPageState extends State<FavoritesPage> {
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
+                      children: [
                         Text(
-                          "حذف",
-                          style: TextStyle(
+                          context.tr(favoritesStrings, 'delete'),
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        SizedBox(width: 8),
-                        Icon(
+                        const SizedBox(width: 8),
+                        const Icon(
                           Icons.delete,
                           color: Colors.white,
                           size: 28,

@@ -3,6 +3,91 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'models/favorite_model.dart';
 import 'widgets/favorite_button.dart';
+import 'l10n/locale_provider.dart';
+
+const Map<String, Map<String, String>> cultureStrings = {
+  'page_title': {
+    'ar': 'العادات والتقاليد',
+    'fr': 'Coutumes et traditions',
+  },
+  'tea_title': {
+    'ar': 'الشاي',
+    'fr': 'Le thé',
+  },
+  'tea_desc': {
+    'ar':
+        'الكرم وحفاوة الاستقبال: استقبال الضيف واجب، ويتم تقديم الشاي ثلاث مرات (المر، القوي، الخفيف).',
+    'fr':
+        "Générosité et hospitalité : accueillir l'invité est un devoir, et le thé est servi en trois fois (amer, fort, léger).",
+  },
+  'chnine_title': {
+    'ar': 'الشنين',
+    'fr': 'Le Chnine',
+  },
+  'chnine_desc': {
+    'ar':
+        'مشروب تقليدي منعش يُحضّر من اللبن، ويُعد جزءاً أساسياً من الحياة اليومية في البادية.',
+    'fr':
+        'Boisson traditionnelle rafraîchissante préparée à base de lait, élément essentiel de la vie quotidienne dans le désert.',
+  },
+  'tent_title': {
+    'ar': 'الخيمة',
+    'fr': 'La tente',
+  },
+  'tent_desc': {
+    'ar':
+        'الخيمة البيضاء هي مسكن البادية، ترمز للأصالة وتزين من الداخل بألوان جميلة.',
+    'fr':
+        "La tente blanche est l'habitat du désert, symbole d'authenticité, décorée à l'intérieur de belles couleurs.",
+  },
+  'wedding_title': {
+    'ar': 'الزواج التقليدي',
+    'fr': 'Le mariage traditionnel',
+  },
+  'wedding_desc': {
+    'ar':
+        'الترواغ، المهر، لباس العروس، والتقاليد الاجتماعية كلها تعكس عمق الثقافة الموريتانية.',
+    'fr':
+        "Le Trawagh, la dot, la tenue de la mariée et les traditions sociales reflètent la profondeur de la culture mauritanienne.",
+  },
+  'tichtar_title': {
+    'ar': 'التيشطار',
+    'fr': 'Le Tichtar',
+  },
+  'tichtar_desc': {
+    'ar': 'طريقة تقليدية لحفظ اللحم عبر تجفيفه تحت الشمس بعد تقطيعه.',
+    'fr':
+        'Méthode traditionnelle de conservation de la viande en la séchant au soleil après découpe.',
+  },
+  'deraa_title': {
+    'ar': 'الدراعة',
+    'fr': 'La Deraa',
+  },
+  'deraa_desc': {
+    'ar': 'زي الرجال التقليدي، غالباً بالأزرق أو الأبيض، مع اللثام المميز.',
+    'fr':
+        "Tenue traditionnelle des hommes, souvent bleue ou blanche, accompagnée du voile distinctif (Lithame).",
+  },
+  'malhfa_title': {
+    'ar': 'الملحفة',
+    'fr': 'La Melhfa',
+  },
+  'malhfa_desc': {
+    'ar': 'الزي التقليدي للمرأة، رمز للأناقة والحشمة، بألوان زاهية متنوعة.',
+    'fr':
+        "Tenue traditionnelle des femmes, symbole d'élégance et de pudeur, aux couleurs vives et variées.",
+  },
+  'lblouh_title': {
+    'ar': 'لبلوح',
+    'fr': 'Le Leblouh',
+  },
+  'lblouh_desc': {
+    'ar': 'تقليد قديم يُعرف بالتسمين، كان يعتبر رمزاً للجمال والثراء.',
+    'fr':
+        "Ancienne tradition connue sous le nom de gavage, considérée autrefois comme un symbole de beauté et de richesse.",
+  },
+};
+
 class CulturePage extends StatefulWidget {
   const CulturePage({super.key});
 
@@ -27,51 +112,43 @@ class _CulturePageState extends State<CulturePage>
   final List<Map<String, String>> traditions = [
     {
       "image": "assets/images/chay.jpeg",
-      "title": "الشاي",
-      "desc":
-          "الكرم وحفاوة الاستقبال: استقبال الضيف واجب، ويتم تقديم الشاي ثلاث مرات (المر، القوي، الخفيف)."
+      "titleKey": "tea_title",
+      "descKey": "tea_desc",
     },
     {
       "image": "assets/images/chnine.jpeg",
-      "title": "الشنين",
-      "desc":
-          "مشروب تقليدي منعش يُحضّر من اللبن، ويُعد جزءاً أساسياً من الحياة اليومية في البادية."
+      "titleKey": "chnine_title",
+      "descKey": "chnine_desc",
     },
     {
       "image": "assets/images/5ayma.jpeg",
-      "title": "الخيمة",
-      "desc":
-          "الخيمة البيضاء هي مسكن البادية، ترمز للأصالة وتزين من الداخل بألوان جميلة."
+      "titleKey": "tent_title",
+      "descKey": "tent_desc",
     },
     {
       "image": "assets/images/t3ras.jpeg",
-      "title": "الزواج التقليدي",
-      "desc":
-          "الترواغ، المهر، لباس العروس، والتقاليد الاجتماعية كلها تعكس عمق الثقافة الموريتانية."
+      "titleKey": "wedding_title",
+      "descKey": "wedding_desc",
     },
     {
       "image": "assets/images/tich6ar.jpeg",
-      "title": "التيشطار",
-      "desc":
-          "طريقة تقليدية لحفظ اللحم عبر تجفيفه تحت الشمس بعد تقطيعه."
+      "titleKey": "tichtar_title",
+      "descKey": "tichtar_desc",
     },
     {
       "image": "assets/images/dera3e.jpeg",
-      "title": "الدراعة",
-      "desc":
-          "زي الرجال التقليدي، غالباً بالأزرق أو الأبيض، مع اللثام المميز."
+      "titleKey": "deraa_title",
+      "descKey": "deraa_desc",
     },
     {
       "image": "assets/images/lmel7fe.jpeg",
-      "title": "الملحفة",
-      "desc":
-          "الزي التقليدي للمرأة، رمز للأناقة والحشمة، بألوان زاهية متنوعة."
+      "titleKey": "malhfa_title",
+      "descKey": "malhfa_desc",
     },
     {
       "image": "assets/images/lblou7.jpeg",
-      "title": "لبلوح",
-      "desc":
-          "تقليد قديم يُعرف بالتسمين، كان يعتبر رمزاً للجمال والثراء."
+      "titleKey": "lblouh_title",
+      "descKey": "lblouh_desc",
     },
   ];
 
@@ -102,9 +179,9 @@ class _CulturePageState extends State<CulturePage>
           icon: const Icon(Icons.arrow_forward, color: Color(0xFF442A22)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          "العادات والتقاليد",
-          style: TextStyle(
+        title: Text(
+          context.tr(cultureStrings, 'page_title'),
+          style: const TextStyle(
             color: Color(0xFF442A22),
             fontWeight: FontWeight.bold,
           ),
@@ -149,8 +226,8 @@ class _CulturePageState extends State<CulturePage>
 
                   return _modernCard(
                     image: item["image"]!,
-                    title: item["title"]!,
-                    desc: item["desc"]!,
+                    title: context.tr(cultureStrings, item["titleKey"]!),
+                    desc: context.tr(cultureStrings, item["descKey"]!),
                   );
                 },
               ),

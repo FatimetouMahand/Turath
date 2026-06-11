@@ -1,4 +1,14 @@
 import 'package:flutter/material.dart';
+import 'l10n/locale_provider.dart';
+
+/// Tableau de traduction des textes de la page Poésie.
+const Map<String, Map<String, String>> poetryStrings = {
+  'page_title': {'ar': 'لغن و الأمثلة', 'fr': 'Leghn et Proverbes'},
+  'image_caption': {'ar': 'جمال لغن الموريتاني', 'fr': 'La beauté du Leghn mauritanien'},
+  'tab_leghn': {'ar': 'لغن', 'fr': 'Leghn'},
+  'tab_amthal': {'ar': 'الأمثلة', 'fr': 'Proverbes'},
+  'no_text': {'ar': 'لا يوجد نص', 'fr': 'Aucun texte disponible'},
+};
 
 class PoetryPage extends StatefulWidget {
   const PoetryPage({super.key});
@@ -189,9 +199,9 @@ class _PoetryPageState extends State<PoetryPage> {
           icon: const Icon(Icons.arrow_forward, color: Color(0xFF442A22)),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          "لغن و الأمثلة",
-          style: TextStyle(
+        title: Text(
+          context.tr(poetryStrings, 'page_title'),
+          style: const TextStyle(
             color: Color(0xFF442A22),
             fontWeight: FontWeight.bold,
           ),
@@ -225,12 +235,12 @@ class _PoetryPageState extends State<PoetryPage> {
                       ),
                     ),
                   ),
-                  const Positioned(
+                  Positioned(
                     bottom: 20,
                     right: 20,
                     child: Text(
-                      "جمال لغن الموريتاني",
-                      style: TextStyle(
+                      context.tr(poetryStrings, 'image_caption'),
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -253,8 +263,8 @@ class _PoetryPageState extends State<PoetryPage> {
               ),
               child: Row(
                 children: [
-                  _tab("لغن", 0),
-                  _tab("الأمثلة", 1),
+                  _tab(context.tr(poetryStrings, 'tab_leghn'), 0),
+                  _tab(context.tr(poetryStrings, 'tab_amthal'), 1),
                 ],
               ),
             ),
@@ -265,7 +275,7 @@ class _PoetryPageState extends State<PoetryPage> {
           /// 🔥 PageView (بدون أخطاء)
           Expanded(
             child: currentList.isEmpty
-                ? const Center(child: Text("لا يوجد نص"))
+                ? Center(child: Text(context.tr(poetryStrings, 'no_text')))
                 : PageView.builder(
                     itemCount: currentList.length,
                     itemBuilder: (context, index) {

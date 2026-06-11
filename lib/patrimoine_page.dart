@@ -4,6 +4,19 @@ import 'poetry_page.dart';
 import 'tools_page.dart';
 import 'culture_page.dart';
 import 'favorites_page.dart';
+import 'l10n/locale_provider.dart';
+
+/// Tableau de traduction des textes de la page Patrimoine.
+const Map<String, Map<String, String>> patrimoineStrings = {
+  'app_title': {'ar': 'تراثنا', 'fr': 'Notre patrimoine'},
+  'discover_subtitle': {'ar': 'اكتشف التراث الموريتاني', 'fr': 'Découvrez le patrimoine mauritanien'},
+  'card_historic_cities': {'ar': 'المدن التاريخية', 'fr': 'Villes historiques'},
+  'card_proverbs': {'ar': 'لغن و الأمثلة الموريتانية', 'fr': 'Lagn et proverbes mauritaniens'},
+  'card_traditional_tools': {'ar': 'أدوات تقليدية', 'fr': 'Outils traditionnels'},
+  'card_traditions': {'ar': 'العادات والتقاليد', 'fr': 'Coutumes et traditions'},
+  'hero_image_caption': {'ar': 'جمال الصحراء الموريتانية\nو تراثها', 'fr': 'La beauté du désert mauritanien\net de son patrimoine'},
+};
+
 void main() {
   runApp(const MyApp());
 }
@@ -31,9 +44,9 @@ class PatrimoinePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xFFFFF8F6),
         elevation: 1,
-        title: const Text(
-          "تراثنا",
-          style: TextStyle(
+        title: Text(
+          context.tr(patrimoineStrings, 'app_title'),
+          style: const TextStyle(
             color: Color(0xFF442A22),
             fontWeight: FontWeight.bold,
             fontSize: 22,
@@ -54,26 +67,26 @@ class PatrimoinePage extends StatelessWidget {
 
               //  HERO
               Column(
-                children: const [
-                  CircleAvatar(
+                children: [
+                  const CircleAvatar(
                     radius: 35,
                     backgroundColor: Color(0xFFF5DED7),
                     child: Icon(Icons.castle,
                         color: Color(0xFF442A22), size: 30),
                   ),
-                  SizedBox(height: 16),
+                  const SizedBox(height: 16),
                   Text(
-                    "تراثنا",
-                    style: TextStyle(
+                    context.tr(patrimoineStrings, 'app_title'),
+                    style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                       color: Color(0xFF442A22),
                     ),
                   ),
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   Text(
-                    "اكتشف التراث الموريتاني",
-                    style: TextStyle(color: Color(0xFF6B5B56)),
+                    context.tr(patrimoineStrings, 'discover_subtitle'),
+                    style: const TextStyle(color: Color(0xFF6B5B56)),
                   ),
                 ],
               ),
@@ -92,16 +105,16 @@ class PatrimoinePage extends StatelessWidget {
                 children: [
                   CustomCard(
                       icon: Icons.fort,
-                      title: "المدن التاريخية"),
+                      titleKey: 'card_historic_cities'),
                   CustomCard(
                       icon: Icons.menu_book,
-                      title: "لغن و الأمثلة الموريتانية"),
+                      titleKey: 'card_proverbs'),
                   CustomCard(
                       icon: Icons.construction,
-                      title: "أدوات تقليدية"),
+                      titleKey: 'card_traditional_tools'),
                   CustomCard(
                       icon: Icons.groups,
-                      title: "العادات والتقاليد"),
+                      titleKey: 'card_traditions'),
                 ],
               ),
 
@@ -132,15 +145,15 @@ class PatrimoinePage extends StatelessWidget {
         ),
       ),
 
-     
-      const Positioned(
+
+      Positioned(
         bottom: 20,
         right: 20,
         left: 20,
         child: Text(
-          "جمال الصحراء الموريتانية\nو تراثها",
+          context.tr(patrimoineStrings, 'hero_image_caption'),
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20, // نفس الحجم تقريباً
             fontWeight: FontWeight.bold,
@@ -163,15 +176,15 @@ class PatrimoinePage extends StatelessWidget {
 
 class CustomCard extends StatelessWidget {
   final IconData icon;
-  final String title;
+  final String titleKey;
 
-  const CustomCard({super.key, required this.icon, required this.title});
+  const CustomCard({super.key, required this.icon, required this.titleKey});
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (title == "المدن التاريخية") {
+        if (titleKey == "card_historic_cities") {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -180,7 +193,7 @@ class CustomCard extends StatelessWidget {
          );
        }
 
-       if (title == "لغن و الأمثلة الموريتانية") {
+       if (titleKey == "card_proverbs") {
          Navigator.push(
            context,
            MaterialPageRoute(
@@ -188,16 +201,16 @@ class CustomCard extends StatelessWidget {
            ),
          );
        }
-      if (title == "أدوات تقليدية") {
+      if (titleKey == "card_traditional_tools") {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => const OldToolsPage(),
     ),
   );
-} 
+}
 
-    if (title == "العادات والتقاليد") {
+    if (titleKey == "card_traditions") {
   Navigator.push(
     context,
     MaterialPageRoute(
@@ -223,14 +236,14 @@ class CustomCard extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              title,
+              context.tr(patrimoineStrings, titleKey),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Color(0xFF442A22),
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
           ],
         ),
       ),
