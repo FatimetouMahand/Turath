@@ -195,7 +195,6 @@ class _TourismPageState extends State<TourismPage>
               children: [
                 _buildHeroSection(context),
                 _buildSearchBar(context),
-                _buildCategoryChips(context),
                 _buildDestinationSection(
                   context,
                   context.tr(tourismStrings, 'historical_sites'),
@@ -609,46 +608,6 @@ class _TourismPageState extends State<TourismPage>
           ),
           onChanged: (value) {
             setState(() {});
-          },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCategoryChips(BuildContext context) {
-    final categories = [
-      {'label': context.tr(tourismStrings, 'category_all'), 'icon': Icons.apps},
-      {'label': context.tr(tourismStrings, 'category_history'), 'icon': Icons.account_balance},
-      {'label': context.tr(tourismStrings, 'category_nature'), 'icon': Icons.terrain},
-      {'label': context.tr(tourismStrings, 'category_beach'), 'icon': Icons.beach_access},
-    ];
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-      child: SizedBox(
-        height: 50,
-        child: ListView.separated(
-          scrollDirection: Axis.horizontal,
-          itemCount: categories.length,
-          separatorBuilder: (context, index) => const SizedBox(width: 12),
-          itemBuilder: (context, index) {
-            final item = categories[index];
-            final isFirst = index == 0;
-            return ElevatedButton.icon(
-              onPressed: () {},
-              icon: Icon(item['icon'] as IconData, size: 18),
-              label: Text(item['label'] as String),
-              style: ElevatedButton.styleFrom(
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(horizontal: 18),
-                backgroundColor:
-                    isFirst ? const Color(0xFF3B2A24) : const Color(0xFFF8E9DC),
-                foregroundColor: isFirst ? Colors.white : const Color(0xFF5D4037),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(22),
-                ),
-              ),
-            );
           },
         ),
       ),
