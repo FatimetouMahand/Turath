@@ -4,6 +4,8 @@ import 'dart:math';
 import 'dart:ui';
 import 'models/destination_model.dart';
 import 'l10n/locale_provider.dart';
+import 'models/favorite_model.dart';
+import 'services/favorite_service.dart';
 
 const Map<String, Map<String, String>> tourismStrings = {
   'destination_of_month': {
