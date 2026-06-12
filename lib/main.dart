@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'patrimoine_page.dart';
 import 'tourism_page.dart';
+import 'splash_screen.dart';
 import 'favorites_page.dart';
 import 'culture_page.dart';
 import 'l10n/locale_provider.dart';
@@ -71,7 +72,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home: const MainHomePage(),
+      home:SplashScreen(),
     );
   }
 }
