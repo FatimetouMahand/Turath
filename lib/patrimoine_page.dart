@@ -3,7 +3,6 @@ import 'cities_page.dart';
 import 'poetry_page.dart';
 import 'tools_page.dart';
 import 'culture_page.dart';
-import 'favorites_page.dart';
 import 'l10n/locale_provider.dart';
 
 /// Tableau de traduction des textes de la page Patrimoine.

@@ -15,10 +15,8 @@ class _SplashScreenState extends State<SplashScreen> {
 void initState() {
   super.initState();
 
-  print("Splash lancé");
-
   Timer(const Duration(seconds: 3), () {
-    print("Navigation vers MainHomePage");
+    if (!mounted) return;
 
     Navigator.pushReplacement(
       context,

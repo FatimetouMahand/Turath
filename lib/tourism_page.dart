@@ -1,11 +1,15 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:provider/provider.dart';
 import 'dart:math';
 import 'dart:ui';
 import 'models/destination_model.dart';
 import 'l10n/locale_provider.dart';
+import 'l10n/tourism_destination_translations.dart';
 import 'models/favorite_model.dart';
-import 'services/favorite_service.dart';
+import 'widgets/favorite_button.dart';
+import 'favorites_page.dart';
 
 const Map<String, Map<String, String>> tourismStrings = {
   'destination_of_month': {
@@ -20,38 +24,19 @@ const Map<String, Map<String, String>> tourismStrings = {
     'ar': 'أماكن طبيعية وتاريخية خلابة تنتظرك',
     'fr': 'Des lieux naturels et historiques magnifiques vous attendent',
   },
-  'start_journey': {
-    'ar': 'ابدأ الرحلة',
-    'fr': 'Commencer le voyage',
-  },
+  'start_journey': {'ar': 'ابدأ الرحلة', 'fr': 'Commencer le voyage'},
   'search_destination_hint': {
     'ar': 'ابحث عن وجهة...',
     'fr': 'Rechercher une destination...',
   },
-  'category_all': {
-    'ar': 'الكل',
-    'fr': 'Tout',
-  },
-  'category_history': {
-    'ar': 'تاريخ',
-    'fr': 'Histoire',
-  },
-  'category_nature': {
-    'ar': 'طبيعة',
-    'fr': 'Nature',
-  },
-  'category_beach': {
-    'ar': 'شاطئ',
-    'fr': 'Plage',
-  },
-  'view_all': {
-    'ar': 'عرض الكل',
-    'fr': 'Voir tout',
-  },
-  'visits_suffix': {
-    'ar': 'زيارة',
-    'fr': 'visites',
-  },
+  'search_results': {'ar': 'نتائج البحث', 'fr': 'Résultats de recherche'},
+  'no_results': {'ar': 'لا توجد نتائج مطابقة', 'fr': 'Aucun résultat trouvé'},
+  'category_all': {'ar': 'الكل', 'fr': 'Tout'},
+  'category_history': {'ar': 'تاريخ', 'fr': 'Histoire'},
+  'category_nature': {'ar': 'طبيعة', 'fr': 'Nature'},
+  'category_beach': {'ar': 'شاطئ', 'fr': 'Plage'},
+  'view_all': {'ar': 'عرض الكل', 'fr': 'Voir tout'},
+  'visits_suffix': {'ar': 'زيارة', 'fr': 'visites'},
   'tap_for_more_info': {
     'ar': 'اضغط لمزيد من المعلومات',
     'fr': 'Appuyez pour plus d\'informations',
@@ -60,46 +45,23 @@ const Map<String, Map<String, String>> tourismStrings = {
     'ar': 'اضغط مجددا لمشاهدة التفاصيل الكاملة',
     'fr': 'Appuyez à nouveau pour voir tous les détails',
   },
-  'type_label': {
-    'ar': 'النوع',
-    'fr': 'Type',
-  },
-  'description_label': {
-    'ar': 'الوصف',
-    'fr': 'Description',
-  },
+  'type_label': {'ar': 'النوع', 'fr': 'Type'},
+  'description_label': {'ar': 'الوصف', 'fr': 'Description'},
   'get_directions': {
     'ar': 'الحصول على الاتجاهات',
     'fr': 'Obtenir l\'itinéraire',
   },
-  'share': {
-    'ar': 'مشاركة',
-    'fr': 'Partager',
+  'share': {'ar': 'مشاركة', 'fr': 'Partager'},
+  'share_copied': {
+    'ar': 'تم نسخ معلومات الوجهة',
+    'fr': 'Les informations ont été copiées',
   },
-  'tourism_title': {
-    'ar': 'السياحة',
-    'fr': 'Tourisme',
-  },
-  'historical_sites': {
-    'ar': 'المواقع التاريخية',
-    'fr': 'Sites historiques',
-  },
-  'natural_wonders': {
-    'ar': 'عجائب الطبيعة',
-    'fr': 'Merveilles naturelles',
-  },
-  'beaches': {
-    'ar': 'الشواطئ',
-    'fr': 'Plages',
-  },
-  'hotels': {
-    'ar': 'الفنادق',
-    'fr': 'Hôtels',
-  },
-  'restaurants': {
-    'ar': 'المطاعم',
-    'fr': 'Restaurants',
-  },
+  'tourism_title': {'ar': 'السياحة', 'fr': 'Tourisme'},
+  'historical_sites': {'ar': 'المواقع التاريخية', 'fr': 'Sites historiques'},
+  'natural_wonders': {'ar': 'عجائب الطبيعة', 'fr': 'Merveilles naturelles'},
+  'beaches': {'ar': 'الشواطئ', 'fr': 'Plages'},
+  'hotels': {'ar': 'الفنادق', 'fr': 'Hôtels'},
+  'restaurants': {'ar': 'المطاعم', 'fr': 'Restaurants'},
 };
 
 class TourismPage extends StatefulWidget {
@@ -111,6 +73,8 @@ class TourismPage extends StatefulWidget {
 
 class _TourismPageState extends State<TourismPage>
     with TickerProviderStateMixin {
+  static const MethodChannel _shareChannel = MethodChannel('turath/share');
+
   late ScrollController _scrollController;
   late AnimationController _heroAnimController;
   late AnimationController _cardsAnimController;
@@ -159,8 +123,8 @@ class _TourismPageState extends State<TourismPage>
       CurvedAnimation(parent: _heroAnimController, curve: Curves.easeOut),
     );
 
-    _heroSlideAnim = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
-        .animate(
+    _heroSlideAnim =
+        Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero).animate(
           CurvedAnimation(parent: _heroAnimController, curve: Curves.easeOut),
         );
 
@@ -189,44 +153,45 @@ class _TourismPageState extends State<TourismPage>
         controller: _scrollController,
         slivers: [
           _buildSliverAppBar(context),
-          SliverToBoxAdapter(
-            child: _buildCarousel(context),
-          ),
+          SliverToBoxAdapter(child: _buildCarousel(context)),
           SliverToBoxAdapter(
             child: Column(
               children: [
                 _buildHeroSection(context),
                 _buildSearchBar(context),
-                _buildDestinationSection(
-                  context,
-                  context.tr(tourismStrings, 'historical_sites'),
-                  historicalSites,
-                  Icons.account_balance,
-                ),
-                _buildDestinationSection(
-                  context,
-                  context.tr(tourismStrings, 'natural_wonders'),
-                  naturalWonders,
-                  Icons.terrain,
-                ),
-                _buildDestinationSection(
-                  context,
-                  context.tr(tourismStrings, 'beaches'),
-                  beaches,
-                  Icons.beach_access,
-                ),
-                _buildDestinationSection(
-                  context,
-                  context.tr(tourismStrings, 'hotels'),
-                  hotels,
-                  Icons.hotel,
-                ),
-                _buildDestinationSection(
-                  context,
-                  context.tr(tourismStrings, 'restaurants'),
-                  restaurants,
-                  Icons.restaurant,
-                ),
+                if (_searchController.text.trim().isEmpty) ...[
+                  _buildDestinationSection(
+                    context,
+                    context.tr(tourismStrings, 'historical_sites'),
+                    historicalSites,
+                    Icons.account_balance,
+                  ),
+                  _buildDestinationSection(
+                    context,
+                    context.tr(tourismStrings, 'natural_wonders'),
+                    naturalWonders,
+                    Icons.terrain,
+                  ),
+                  _buildDestinationSection(
+                    context,
+                    context.tr(tourismStrings, 'beaches'),
+                    beaches,
+                    Icons.beach_access,
+                  ),
+                  _buildDestinationSection(
+                    context,
+                    context.tr(tourismStrings, 'hotels'),
+                    hotels,
+                    Icons.hotel,
+                  ),
+                  _buildDestinationSection(
+                    context,
+                    context.tr(tourismStrings, 'restaurants'),
+                    restaurants,
+                    Icons.restaurant,
+                  ),
+                ] else
+                  _buildSearchResults(context),
                 const SizedBox(height: 80),
               ],
             ),
@@ -242,6 +207,21 @@ class _TourismPageState extends State<TourismPage>
       backgroundColor: Colors.white,
       elevation: 0,
       expandedHeight: 120,
+      actions: [
+        Padding(
+          padding: const EdgeInsetsDirectional.only(end: 12),
+          child: IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const FavoritesPage()),
+              );
+            },
+            icon: const Icon(Icons.favorite_rounded),
+            color: Color(0xFF3B2A24),
+          ),
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         titlePadding: const EdgeInsetsDirectional.only(start: 20, bottom: 16),
         title: Text(
@@ -324,6 +304,11 @@ class _TourismPageState extends State<TourismPage>
   }
 
   Widget _buildCarouselItem(BuildContext context, Destination destination) {
+    final text = tourismText(
+      destination,
+      context.watch<LocaleProvider>().language,
+    );
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
@@ -366,7 +351,7 @@ class _TourismPageState extends State<TourismPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  destination.title,
+                  text.title,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 22,
@@ -376,11 +361,14 @@ class _TourismPageState extends State<TourismPage>
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.location_on,
-                        size: 16, color: Colors.white.withValues(alpha: 0.8)),
+                    Icon(
+                      Icons.location_on,
+                      size: 16,
+                      color: Colors.white.withValues(alpha: 0.8),
+                    ),
                     const SizedBox(width: 4),
                     Text(
-                      '${destination.city}, ${destination.region}',
+                      '${text.city}, ${text.region}',
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.9),
                         fontSize: 12,
@@ -396,18 +384,9 @@ class _TourismPageState extends State<TourismPage>
               top: 12,
               right: 12,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFF6B6B),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  context.tr(tourismStrings, 'destination_of_month'),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                    fontWeight: FontWeight.bold,
-                  ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 6,
                 ),
               ),
             ),
@@ -535,27 +514,7 @@ class _TourismPageState extends State<TourismPage>
             Positioned(
               top: 20,
               right: 20,
-              child: RotationTransition(
-                turns: _badgeRotateAnim,
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFFF6B6B),
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: const Color(0xFFFF6B6B).withValues(alpha: 0.4),
-                        blurRadius: 12,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: const Text(
-                    '🔥',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
-              ),
+              child: RotationTransition(turns: _badgeRotateAnim),
             ),
           ],
         ),
@@ -581,9 +540,16 @@ class _TourismPageState extends State<TourismPage>
         ),
         child: TextField(
           controller: _searchController,
+          textInputAction: TextInputAction.search,
           decoration: InputDecoration(
             hintText: context.tr(tourismStrings, 'search_destination_hint'),
-            prefixIcon: const Icon(Icons.search, color: Color(0xFF7A604E)),
+            prefixIcon: IconButton(
+              onPressed: () {
+                FocusScope.of(context).unfocus();
+                setState(() {});
+              },
+              icon: const Icon(Icons.search, color: Color(0xFF7A604E)),
+            ),
             suffixIcon: _searchController.text.isNotEmpty
                 ? GestureDetector(
                     onTap: () {
@@ -611,7 +577,108 @@ class _TourismPageState extends State<TourismPage>
           onChanged: (value) {
             setState(() {});
           },
+          onSubmitted: (value) {
+            FocusScope.of(context).unfocus();
+            setState(() {});
+          },
         ),
+      ),
+    );
+  }
+
+  String _normalizeSearchText(String value) {
+    return value.trim().toLowerCase();
+  }
+
+  bool _matchesDestination(
+    BuildContext context,
+    Destination destination,
+    String query,
+  ) {
+    final language = context.read<LocaleProvider>().language;
+    final text = tourismText(destination, language);
+    final searchableText = [
+      text.title,
+      text.shortDescription,
+      text.description,
+      text.category,
+      text.city,
+      text.region,
+      ...text.tags,
+    ].map(_normalizeSearchText).join(' ');
+
+    return searchableText.contains(query);
+  }
+
+  List<Destination> _filteredDestinations(BuildContext context) {
+    final query = _normalizeSearchText(_searchController.text);
+    if (query.isEmpty) return allDestinations;
+
+    return allDestinations
+        .where(
+          (destination) => _matchesDestination(context, destination, query),
+        )
+        .toList();
+  }
+
+  Widget _buildSearchResults(BuildContext context) {
+    final results = _filteredDestinations(context);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.search, color: Color(0xFF3B2A24), size: 24),
+              const SizedBox(width: 12),
+              Text(
+                context.tr(tourismStrings, 'search_results'),
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF3B2A24),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          if (results.isEmpty)
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 36),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(color: const Color(0xFFE7DED4)),
+              ),
+              child: Text(
+                context.tr(tourismStrings, 'no_results'),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Color(0xFF7A6B62),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            )
+          else
+            ListView.separated(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: results.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 14),
+              itemBuilder: (context, index) {
+                final destination = results[index];
+                return _buildDestinationListItem(
+                  context,
+                  destination,
+                  onTap: () => _showDestinationDetail(context, destination),
+                );
+              },
+            ),
+        ],
       ),
     );
   }
@@ -645,7 +712,9 @@ class _TourismPageState extends State<TourismPage>
                 ],
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  _showDestinationList(context, title, destinations, icon);
+                },
                 style: TextButton.styleFrom(
                   backgroundColor: const Color(0xFFF5E3D7),
                   shape: RoundedRectangleBorder(
@@ -683,14 +752,230 @@ class _TourismPageState extends State<TourismPage>
     );
   }
 
+  void _showDestinationList(
+    BuildContext context,
+    String title,
+    List<Destination> destinations,
+    IconData icon,
+  ) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (sheetContext) {
+        return ClipRRect(
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
+          child: Container(
+            color: const Color(0xFFFCF8F3),
+            child: DraggableScrollableSheet(
+              expand: false,
+              initialChildSize: 0.82,
+              minChildSize: 0.45,
+              maxChildSize: 0.95,
+              builder: (context, scrollController) {
+                return Column(
+                  children: [
+                    const SizedBox(height: 12),
+                    Container(
+                      height: 4,
+                      width: 42,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFD0CCC6),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFFF5E3D7),
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                            child: Icon(icon, color: const Color(0xFF3B2A24)),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              title,
+                              style: const TextStyle(
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF3B2A24),
+                              ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () => Navigator.pop(sheetContext),
+                            icon: const Icon(Icons.close),
+                            color: const Color(0xFF3B2A24),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.separated(
+                        controller: scrollController,
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 28),
+                        itemCount: destinations.length,
+                        separatorBuilder: (_, index) =>
+                            const SizedBox(height: 14),
+                        itemBuilder: (context, index) {
+                          final destination = destinations[index];
+                          return _buildDestinationListItem(
+                            context,
+                            destination,
+                            onTap: () {
+                              Navigator.pop(sheetContext);
+                              _showDestinationDetail(this.context, destination);
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildDestinationListItem(
+    BuildContext context,
+    Destination destination, {
+    required VoidCallback onTap,
+  }) {
+    final text = tourismText(
+      destination,
+      context.watch<LocaleProvider>().language,
+    );
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 126,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFFE7DED4)),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x14000000),
+              blurRadius: 14,
+              offset: Offset(0, 7),
+            ),
+          ],
+        ),
+        clipBehavior: Clip.antiAlias,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 124,
+              height: double.infinity,
+              child: Image.asset(destination.image, fit: BoxFit.cover),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            text.title,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Color(0xFF3B2A24),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                        const SizedBox(width: 3),
+                        Text(
+                          '${destination.rating}',
+                          style: const TextStyle(
+                            color: Color(0xFF3B2A24),
+                            fontWeight: FontWeight.w700,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      text.shortDescription,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Color(0xFF7A6B62),
+                        fontSize: 12,
+                        height: 1.35,
+                      ),
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.location_on,
+                          size: 14,
+                          color: Color(0xFF7A604E),
+                        ),
+                        const SizedBox(width: 4),
+                        Expanded(
+                          child: Text(
+                            '${text.city} - ${text.region}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Color(0xFF7A604E),
+                              fontSize: 11,
+                            ),
+                          ),
+                        ),
+                        const Icon(
+                          Icons.chevron_right,
+                          color: Color(0xFF3B2A24),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildDestinationCard(
     BuildContext context,
     Destination destination,
     int index,
   ) {
+    final text = tourismText(
+      destination,
+      context.watch<LocaleProvider>().language,
+    );
+
     return ScaleTransition(
       scale: Tween<double>(begin: 0.8, end: 1)
-          .animate(CurvedAnimation(parent: _cardsAnimController, curve: Interval((index * 0.1) % 1, 1)))
+          .animate(
+            CurvedAnimation(
+              parent: _cardsAnimController,
+              curve: Interval((index * 0.1) % 1, 1),
+            ),
+          )
           .drive(CurveTween(curve: Curves.easeOut)),
       child: GestureDetector(
         onTap: () => _showShortDescription(context, destination),
@@ -713,10 +998,7 @@ class _TourismPageState extends State<TourismPage>
                 borderRadius: BorderRadius.circular(24),
                 child: Hero(
                   tag: destination.id,
-                  child: Image.asset(
-                    destination.image,
-                    fit: BoxFit.cover,
-                  ),
+                  child: Image.asset(destination.image, fit: BoxFit.cover),
                 ),
               ),
               // Gradient overlay
@@ -764,7 +1046,7 @@ class _TourismPageState extends State<TourismPage>
                             children: [
                               Expanded(
                                 child: Text(
-                                  destination.title,
+                                  text.title,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
@@ -785,8 +1067,11 @@ class _TourismPageState extends State<TourismPage>
                                 ),
                                 child: Row(
                                   children: [
-                                    const Icon(Icons.star,
-                                        size: 14, color: Colors.white),
+                                    const Icon(
+                                      Icons.star,
+                                      size: 14,
+                                      color: Colors.white,
+                                    ),
                                     const SizedBox(width: 2),
                                     Text(
                                       '${destination.rating}',
@@ -805,13 +1090,15 @@ class _TourismPageState extends State<TourismPage>
                           // Localisation
                           Row(
                             children: [
-                              Icon(Icons.location_on,
-                                  size: 14,
-                                  color: Colors.white.withValues(alpha: 0.8)),
+                              Icon(
+                                Icons.location_on,
+                                size: 14,
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
                               const SizedBox(width: 4),
                               Expanded(
                                 child: Text(
-                                  '${destination.city} - ${destination.region}',
+                                  '${text.city} - ${text.region}',
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 11,
@@ -825,9 +1112,11 @@ class _TourismPageState extends State<TourismPage>
                           const SizedBox(height: 8),
                           Row(
                             children: [
-                              Icon(Icons.visibility_outlined,
-                                  size: 14,
-                                  color: Colors.white.withValues(alpha: 0.8)),
+                              Icon(
+                                Icons.visibility_outlined,
+                                size: 14,
+                                color: Colors.white.withValues(alpha: 0.8),
+                              ),
                               const SizedBox(width: 4),
                               Text(
                                 '${destination.visits} ${context.tr(tourismStrings, 'visits_suffix')}',
@@ -861,7 +1150,10 @@ class _TourismPageState extends State<TourismPage>
                                 ),
                                 const SizedBox(width: 6),
                                 Text(
-                                  context.tr(tourismStrings, 'tap_for_more_info'),
+                                  context.tr(
+                                    tourismStrings,
+                                    'tap_for_more_info',
+                                  ),
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 11,
@@ -883,8 +1175,12 @@ class _TourismPageState extends State<TourismPage>
     );
   }
 
-
   void _showShortDescription(BuildContext context, Destination destination) {
+    final text = tourismText(
+      destination,
+      context.read<LocaleProvider>().language,
+    );
+
     showDialog(
       context: context,
       builder: (context) => GestureDetector(
@@ -921,7 +1217,7 @@ class _TourismPageState extends State<TourismPage>
                           children: [
                             Expanded(
                               child: Text(
-                                destination.title,
+                                text.title,
                                 style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -940,7 +1236,7 @@ class _TourismPageState extends State<TourismPage>
                         ),
                         const SizedBox(height: 16),
                         Text(
-                          destination.shortDescription,
+                          text.shortDescription,
                           style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
@@ -969,7 +1265,10 @@ class _TourismPageState extends State<TourismPage>
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  context.tr(tourismStrings, 'tap_again_full_details'),
+                                  context.tr(
+                                    tourismStrings,
+                                    'tap_again_full_details',
+                                  ),
                                   style: TextStyle(
                                     fontSize: 12,
                                     color: Colors.white.withValues(alpha: 0.7),
@@ -1000,10 +1299,40 @@ class _TourismPageState extends State<TourismPage>
     );
   }
 
+  Future<void> _shareDestination(
+    BuildContext context,
+    Destination destination,
+    TourismDestinationText text,
+  ) async {
+    final shareText =
+        '${text.title}\n\n'
+        '${text.description}\n\n'
+        '${text.city}, ${text.region}\n'
+        'https://www.google.com/maps/search/?api=1&query=${destination.latitude},${destination.longitude}';
+
+    try {
+      await _shareChannel.invokeMethod('shareText', {
+        'title': text.title,
+        'text': shareText,
+      });
+    } on PlatformException {
+      await Clipboard.setData(ClipboardData(text: shareText));
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.tr(tourismStrings, 'share_copied'))),
+      );
+    }
+  }
+
   Widget _buildDestinationBottomSheet(
     BuildContext context,
     Destination destination,
   ) {
+    final text = tourismText(
+      destination,
+      context.watch<LocaleProvider>().language,
+    );
+
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
       child: BackdropFilter(
@@ -1062,7 +1391,7 @@ class _TourismPageState extends State<TourismPage>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                destination.title,
+                                text.title,
                                 style: const TextStyle(
                                   fontSize: 26,
                                   fontWeight: FontWeight.bold,
@@ -1080,7 +1409,7 @@ class _TourismPageState extends State<TourismPage>
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                                 child: Text(
-                                  destination.category,
+                                  text.category,
                                   style: const TextStyle(
                                     color: Color(0xFF3B2A24),
                                     fontWeight: FontWeight.w600,
@@ -1094,19 +1423,30 @@ class _TourismPageState extends State<TourismPage>
                         Column(
                           children: [
                             Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF5E3D7),
+                              decoration: const BoxDecoration(
+                                color: Color(0xFFF5E3D7),
                                 shape: BoxShape.circle,
                               ),
-                              child: const Icon(Icons.favorite_outline,
-                                  color: Color(0xFF3B2A24)),
+                              child: FavoriteButton(
+                                item: FavoriteItem(
+                                  image: destination.image,
+                                  title: text.title,
+                                  description: text.description,
+                                  tourismId: destination.id,
+                                ),
+                                iconColor: const Color(0xFF3B2A24),
+                                activeColor: Colors.redAccent,
+                                backgroundColor: Colors.transparent,
+                              ),
                             ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.star,
-                                    color: Colors.amber, size: 18),
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                  size: 18,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   '${destination.rating}',
@@ -1134,7 +1474,7 @@ class _TourismPageState extends State<TourismPage>
                     Wrap(
                       spacing: 10,
                       runSpacing: 10,
-                      children: destination.tags
+                      children: text.tags
                           .map(
                             (tag) => Container(
                               padding: const EdgeInsets.symmetric(
@@ -1168,7 +1508,7 @@ class _TourismPageState extends State<TourismPage>
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      destination.description,
+                      text.description,
                       style: const TextStyle(
                         fontSize: 14,
                         color: Color(0xFF6B5B50),
@@ -1181,7 +1521,9 @@ class _TourismPageState extends State<TourismPage>
                       child: FilledButton.icon(
                         onPressed: () {},
                         icon: const Icon(Icons.directions),
-                        label: Text(context.tr(tourismStrings, 'get_directions')),
+                        label: Text(
+                          context.tr(tourismStrings, 'get_directions'),
+                        ),
                         style: FilledButton.styleFrom(
                           backgroundColor: const Color(0xFF3B2A24),
                           padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1192,7 +1534,9 @@ class _TourismPageState extends State<TourismPage>
                     SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: () {
+                          _shareDestination(context, destination, text);
+                        },
                         icon: const Icon(Icons.share),
                         label: Text(context.tr(tourismStrings, 'share')),
                         style: OutlinedButton.styleFrom(

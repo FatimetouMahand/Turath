@@ -5,6 +5,18 @@ import 'package:projet_devmobil/models/favorite_model.dart';
 class FavoriteService {
   static const String key = "favorites";
 
+  static bool _sameFavorite(FavoriteItem first, FavoriteItem second) {
+    if (first.tourismId != null && second.tourismId != null) {
+      return first.tourismId == second.tourismId;
+    }
+
+    if (first.tourismId != null || second.tourismId != null) {
+      return first.image == second.image;
+    }
+
+    return first.title == second.title;
+  }
+
   static Future<List<FavoriteItem>> getFavorites() async {
     final prefs = await SharedPreferences.getInstance();
     final data = prefs.getString(key);
@@ -24,10 +36,10 @@ class FavoriteService {
   static Future<void> toggleFavorite(FavoriteItem item) async {
     List<FavoriteItem> items = await getFavorites();
 
-    final exists = items.any((e) => e.title == item.title);
+    final exists = items.any((e) => _sameFavorite(e, item));
 
     if (exists) {
-      items.removeWhere((e) => e.title == item.title);
+      items.removeWhere((e) => _sameFavorite(e, item));
     } else {
       items.add(item);
     }
@@ -38,5 +50,10 @@ class FavoriteService {
   static Future<bool> isFavorite(String title) async {
     final items = await getFavorites();
     return items.any((e) => e.title == title);
+  }
+
+  static Future<bool> isFavoriteItem(FavoriteItem item) async {
+    final items = await getFavorites();
+    return items.any((e) => _sameFavorite(e, item));
   }
 }

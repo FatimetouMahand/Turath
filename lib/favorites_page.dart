@@ -47,9 +47,11 @@
 //   }
 // }
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:projet_devmobil/models/favorite_model.dart';
 import 'package:projet_devmobil/services/favorite_service.dart';
 import 'l10n/locale_provider.dart';
+import 'l10n/tourism_destination_translations.dart';
 
 const Map<String, Map<String, String>> favoritesStrings = {
   'favorites_title': {'ar': 'المفضلة', 'fr': 'Favoris'},
@@ -74,19 +76,20 @@ class _FavoritesPageState extends State<FavoritesPage> {
     load();
   }
 
-  void load() async {
+  Future<void> load() async {
     items = await FavoriteService.getFavorites();
+    if (!mounted) return;
     setState(() {});
   }
 
-  void deleteItem(int index) async {
-    final item = items[index];
-
+  Future<void> deleteItem(int index) async {
     items.removeAt(index);
     await FavoriteService.saveFavorites(items);
 
+    if (!mounted) return;
     setState(() {});
 
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(context.tr(favoritesStrings, 'item_deleted')),
@@ -97,6 +100,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final language = context.watch<LocaleProvider>().language;
+
     return Scaffold(
       backgroundColor: const Color(0xFFFFF8F6),
 
@@ -125,9 +130,17 @@ class _FavoritesPageState extends State<FavoritesPage> {
               itemCount: items.length,
               itemBuilder: (context, index) {
                 final item = items[index];
+                final tourismText = tourismTextByFavorite(
+                  item.tourismId,
+                  item.image,
+                  language,
+                );
+                final title = tourismText?.title ?? item.title;
+                final description =
+                    tourismText?.description ?? item.description;
 
                 return Dismissible(
-                  key: Key(item.title),
+                  key: Key(item.tourismId ?? '${item.image}-${item.title}'),
                   direction: DismissDirection.endToStart,
 
                   onDismissed: (direction) {
@@ -154,11 +167,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        const Icon(
-                          Icons.delete,
-                          color: Colors.white,
-                          size: 28,
-                        ),
+                        const Icon(Icons.delete, color: Colors.white, size: 28),
                       ],
                     ),
                   ),
@@ -171,16 +180,15 @@ class _FavoritesPageState extends State<FavoritesPage> {
                       borderRadius: BorderRadius.circular(20),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha: 0.06),
                           blurRadius: 12,
                           offset: const Offset(0, 6),
-                        )
+                        ),
                       ],
                     ),
 
                     child: Row(
                       children: [
-
                         /// 🖼️ IMAGE
                         ClipRRect(
                           borderRadius: const BorderRadius.only(
@@ -202,9 +210,8 @@ class _FavoritesPageState extends State<FavoritesPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-
                                 Text(
-                                  item.title,
+                                  title,
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -215,7 +222,7 @@ class _FavoritesPageState extends State<FavoritesPage> {
                                 const SizedBox(height: 6),
 
                                 Text(
-                                  item.description,
+                                  description,
                                   maxLines: 3,
                                   overflow: TextOverflow.ellipsis,
                                   style: const TextStyle(
@@ -228,7 +235,6 @@ class _FavoritesPageState extends State<FavoritesPage> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),

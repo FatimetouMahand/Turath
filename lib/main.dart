@@ -28,7 +28,10 @@ void main() {
 /// Tableau de traduction des textes de la page d'accueil.
 const Map<String, Map<String, String>> mainStrings = {
   'welcome': {'ar': 'مرحباً', 'fr': 'Bienvenue'},
-  'discover_mauritania': {'ar': 'اكتشف موريتانيا', 'fr': 'Découvrir la Mauritanie'},
+  'discover_mauritania': {
+    'ar': 'اكتشف موريتانيا',
+    'fr': 'Découvrir la Mauritanie',
+  },
   'nav_home': {'ar': 'الرئيسية', 'fr': 'Accueil'},
   'nav_patrimoine': {'ar': 'التراث', 'fr': 'Patrimoine'},
   'nav_tourism': {'ar': 'السياحة', 'fr': 'Tourisme'},
@@ -36,7 +39,10 @@ const Map<String, Map<String, String>> mainStrings = {
   'nav_culture': {'ar': 'الثقافة', 'fr': 'Culture'},
   'search_hint': {'ar': 'ابحث عن الأماكن...', 'fr': 'Rechercher un lieu...'},
   'featured': {'ar': '✨ مميز', 'fr': '✨ Coup de cœur'},
-  'hero_title': {'ar': 'رحلة عبر الصحراء\nالموريتانية', 'fr': 'Un voyage à travers\nle désert mauritanien'},
+  'hero_title': {
+    'ar': 'رحلة عبر الصحراء\nالموريتانية',
+    'fr': 'Un voyage à travers\nle désert mauritanien',
+  },
   'hero_location': {'ar': 'شنقيط، موريتانيا', 'fr': 'Chinguetti, Mauritanie'},
   'discover': {'ar': 'اكتشف', 'fr': 'Découvrir'},
   'sections': {'ar': 'الأقسام', 'fr': 'Sections'},
@@ -47,7 +53,10 @@ const Map<String, Map<String, String>> mainStrings = {
   'place_oualata': {'ar': 'ولاتة', 'fr': 'Oualata'},
   'place_tichitt': {'ar': 'تيشيت', 'fr': 'Tichitt'},
   'region_adrar': {'ar': 'ولاية آدرار', 'fr': 'Région de l’Adrar'},
-  'region_hodh_chargui': {'ar': 'ولاية الحوض الشرقي', 'fr': 'Région du Hodh Ech Chargui'},
+  'region_hodh_chargui': {
+    'ar': 'ولاية الحوض الشرقي',
+    'fr': 'Région du Hodh Ech Chargui',
+  },
   'region_tagant': {'ar': 'ولاية تكانت', 'fr': 'Région du Tagant'},
 };
 
@@ -72,7 +81,7 @@ class MyApp extends StatelessWidget {
           child: child!,
         );
       },
-      home:SplashScreen(),
+      home: SplashScreen(),
     );
   }
 }
@@ -114,13 +123,10 @@ class _MainHomePageState extends State<MainHomePage>
       vsync: this,
       duration: const Duration(milliseconds: 900),
     );
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.15),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _slideController,
-      curve: Curves.easeOutCubic,
-    ));
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, 0.15), end: Offset.zero).animate(
+          CurvedAnimation(parent: _slideController, curve: Curves.easeOutCubic),
+        );
 
     _staggerController = AnimationController(
       vsync: this,
@@ -158,24 +164,15 @@ class _MainHomePageState extends State<MainHomePage>
 
     // Navigate to other pages
     if (index == 1) {
-      Navigator.push(
-        context,
-        _createRoute(const PatrimoinePage()),
-      ).then((_) {
+      Navigator.push(context, _createRoute(const PatrimoinePage())).then((_) {
         setState(() => _currentIndex = 0);
       });
     } else if (index == 2) {
-      Navigator.push(
-        context,
-        _createRoute(const TourismPage()),
-      ).then((_) {
+      Navigator.push(context, _createRoute(const TourismPage())).then((_) {
         setState(() => _currentIndex = 0);
       });
     } else if (index == 3) {
-      Navigator.push(
-        context,
-        _createRoute(const FavoritesPage()),
-      ).then((_) {
+      Navigator.push(context, _createRoute(const FavoritesPage())).then((_) {
         setState(() => _currentIndex = 0);
       });
     }
@@ -188,12 +185,11 @@ class _MainHomePageState extends State<MainHomePage>
         const begin = Offset(0.0, 1.0);
         const end = Offset.zero;
         const curve = Curves.easeInOutCubic;
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
+        var tween = Tween(
+          begin: begin,
+          end: end,
+        ).chain(CurveTween(curve: curve));
+        return SlideTransition(position: animation.drive(tween), child: child);
       },
       transitionDuration: const Duration(milliseconds: 500),
     );
@@ -235,10 +231,26 @@ class _MainHomePageState extends State<MainHomePage>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _navItem(Icons.home_rounded, context.tr(mainStrings, 'nav_home'), 0),
-              _navItem(Icons.account_balance_rounded, context.tr(mainStrings, 'nav_patrimoine'), 1),
-              _navItem(Icons.explore_rounded, context.tr(mainStrings, 'nav_tourism'), 2),
-              _navItem(Icons.favorite_rounded, context.tr(mainStrings, 'nav_favorites'), 3),
+              _navItem(
+                Icons.home_rounded,
+                context.tr(mainStrings, 'nav_home'),
+                0,
+              ),
+              _navItem(
+                Icons.account_balance_rounded,
+                context.tr(mainStrings, 'nav_patrimoine'),
+                1,
+              ),
+              _navItem(
+                Icons.explore_rounded,
+                context.tr(mainStrings, 'nav_tourism'),
+                2,
+              ),
+              _navItem(
+                Icons.favorite_rounded,
+                context.tr(mainStrings, 'nav_favorites'),
+                3,
+              ),
             ],
           ),
         ),
@@ -311,35 +323,22 @@ class _MainHomePageState extends State<MainHomePage>
           physics: const BouncingScrollPhysics(),
           slivers: [
             // Gradient App Bar
-            SliverToBoxAdapter(
-              child: _buildGradientHeader(),
-            ),
+            SliverToBoxAdapter(child: _buildGradientHeader()),
 
             // Search bar
-            SliverToBoxAdapter(
-              child: _buildSearchBar(),
-            ),
+            SliverToBoxAdapter(child: _buildSearchBar()),
 
             // Hero banner
-            SliverToBoxAdapter(
-              child: _buildHeroBanner(),
-            ),
+            SliverToBoxAdapter(child: _buildHeroBanner()),
 
             // Categories section
-            SliverToBoxAdapter(
-              child: _buildCategoriesSection(context),
-            ),
+            SliverToBoxAdapter(child: _buildCategoriesSection(context)),
 
             // Famous places
-            SliverToBoxAdapter(
-              child: _buildFamousPlaces(),
-            ),
+            SliverToBoxAdapter(child: _buildFamousPlaces()),
 
-          
             // Bottom padding for nav bar
-            const SliverToBoxAdapter(
-              child: SizedBox(height: 100),
-            ),
+            const SliverToBoxAdapter(child: SizedBox(height: 100)),
           ],
         ),
       ),
@@ -359,10 +358,7 @@ class _MainHomePageState extends State<MainHomePage>
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFFFFF8F6),
-            Color(0xFFFFF2ED),
-          ],
+          colors: [Color(0xFFFFF8F6), Color(0xFFFFF2ED)],
         ),
       ),
       child: Row(
@@ -377,7 +373,9 @@ class _MainHomePageState extends State<MainHomePage>
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
+                        horizontal: 10,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(20),
                         color: const Color(0xFFF5DED7),
@@ -471,7 +469,11 @@ class _MainHomePageState extends State<MainHomePage>
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(Icons.language_rounded, color: Color(0xFF442A22), size: 18),
+            const Icon(
+              Icons.language_rounded,
+              color: Color(0xFF442A22),
+              size: 18,
+            ),
             const SizedBox(width: 6),
             Text(
               locale.isArabic ? "FR" : "AR",
@@ -495,9 +497,7 @@ class _MainHomePageState extends State<MainHomePage>
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
           color: Colors.white,
-          border: Border.all(
-            color: const Color(0xFFF4ECEA),
-          ),
+          border: Border.all(color: const Color(0xFFF4ECEA)),
           boxShadow: [
             BoxShadow(
               color: const Color(0xFF442A22).withValues(alpha: 0.06),
@@ -505,22 +505,6 @@ class _MainHomePageState extends State<MainHomePage>
               offset: const Offset(0, 5),
             ),
           ],
-        ),
-        child: TextField(
-          style: const TextStyle(color: Color(0xFF442A22), fontSize: 14),
-          decoration: InputDecoration(
-            hintText: context.tr(mainStrings, 'search_hint'),
-            hintStyle: const TextStyle(
-              color: Color(0xFF6B5B56),
-              fontSize: 14,
-            ),
-            prefixIcon: const Icon(
-              Icons.search_rounded,
-              color: Color(0xFF6B5B56),
-            ),
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 16),
-          ),
         ),
       ),
     );
@@ -552,10 +536,7 @@ class _MainHomePageState extends State<MainHomePage>
               fit: StackFit.expand,
               children: [
                 // Background image
-                Image.asset(
-                  "assets/images/chinguetti.jpeg",
-                  fit: BoxFit.cover,
-                ),
+                Image.asset("assets/images/chinguetti.jpeg", fit: BoxFit.cover),
 
                 // Gradient overlay
                 Container(
@@ -582,7 +563,9 @@ class _MainHomePageState extends State<MainHomePage>
                     children: [
                       Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
+                          horizontal: 10,
+                          vertical: 5,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
                           color: const Color(0xFFF5DED7).withValues(alpha: 0.3),
@@ -611,7 +594,9 @@ class _MainHomePageState extends State<MainHomePage>
                         children: [
                           Icon(
                             Icons.location_on_rounded,
-                            color: const Color(0xFFF5DED7).withValues(alpha: 0.9),
+                            color: const Color(
+                              0xFFF5DED7,
+                            ).withValues(alpha: 0.9),
                             size: 14,
                           ),
                           const SizedBox(width: 4),
@@ -625,14 +610,13 @@ class _MainHomePageState extends State<MainHomePage>
                           const Spacer(),
                           Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
                               gradient: const LinearGradient(
-                                colors: [
-                                  Color(0xFFF5DED7),
-                                  Color(0xFFE8C8B8),
-                                ],
+                                colors: [Color(0xFFF5DED7), Color(0xFFE8C8B8)],
                               ),
                             ),
                             child: Row(
@@ -687,22 +671,22 @@ class _MainHomePageState extends State<MainHomePage>
                   color: Color(0xFF442A22),
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: const Color(0xFFF5DED7),
-                ),
-                child: Text(
-                  context.tr(mainStrings, 'see_all'),
-                  style: const TextStyle(
-                    color: Color(0xFF442A22),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ),
+              // Container(
+              //   padding:
+              //       const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              //   decoration: BoxDecoration(
+              //     borderRadius: BorderRadius.circular(12),
+              //     color: const Color(0xFFF5DED7),
+              //   ),
+              //   // child: Text(
+              //   //   context.tr(mainStrings, 'see_all'),
+              //   //   style: const TextStyle(
+              //   //     color: Color(0xFF442A22),
+              //   //     fontSize: 12,
+              //   //     fontWeight: FontWeight.w500,
+              //   //   ),
+              //   // ),
+              // ),
             ],
           ),
           const SizedBox(height: 18),
@@ -718,8 +702,7 @@ class _MainHomePageState extends State<MainHomePage>
                   iconBgColor: const Color(0xFFF5DED7),
                   delay: 0,
                   onTap: () {
-                    Navigator.push(
-                        context, _createRoute(const TourismPage()));
+                    Navigator.push(context, _createRoute(const TourismPage()));
                   },
                 ),
               ),
@@ -734,7 +717,9 @@ class _MainHomePageState extends State<MainHomePage>
                   delay: 1,
                   onTap: () {
                     Navigator.push(
-                        context, _createRoute(const PatrimoinePage()));
+                      context,
+                      _createRoute(const PatrimoinePage()),
+                    );
                   },
                 ),
               ),
@@ -753,7 +738,9 @@ class _MainHomePageState extends State<MainHomePage>
                   delay: 2,
                   onTap: () {
                     Navigator.push(
-                        context, _createRoute(const FavoritesPage()));
+                      context,
+                      _createRoute(const FavoritesPage()),
+                    );
                   },
                 ),
               ),
@@ -766,8 +753,7 @@ class _MainHomePageState extends State<MainHomePage>
                   iconBgColor: const Color(0xFFF5DED7),
                   delay: 3,
                   onTap: () {
-                    Navigator.push(
-                        context, _createRoute(const CulturePage()));
+                    Navigator.push(context, _createRoute(const CulturePage()));
                   },
                 ),
               ),
@@ -805,10 +791,7 @@ class _MainHomePageState extends State<MainHomePage>
       builder: (context, child) {
         return Transform.translate(
           offset: Offset(0, 20 * (1 - animation.value)),
-          child: Opacity(
-            opacity: animation.value,
-            child: child,
-          ),
+          child: Opacity(opacity: animation.value, child: child),
         );
       },
       child: GestureDetector(
@@ -928,19 +911,26 @@ class _MainHomePageState extends State<MainHomePage>
                   color: Color(0xFF442A22),
                 ),
               ),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12),
-                  color: const Color(0xFFF5DED7),
-                ),
-                child: Text(
-                  context.tr(mainStrings, 'see_all'),
-                  style: const TextStyle(
-                    color: Color(0xFF442A22),
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(context, _createRoute(const TourismPage()));
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12),
+                    color: const Color(0xFFF5DED7),
+                  ),
+                  child: Text(
+                    context.tr(mainStrings, 'see_all'),
+                    style: const TextStyle(
+                      color: Color(0xFF442A22),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
               ),
@@ -995,10 +985,7 @@ class _MainHomePageState extends State<MainHomePage>
           fit: StackFit.expand,
           children: [
             // Image
-            Image.asset(
-              image,
-              fit: BoxFit.cover,
-            ),
+            Image.asset(image, fit: BoxFit.cover),
 
             // Gradient overlay
             Container(
@@ -1022,8 +1009,7 @@ class _MainHomePageState extends State<MainHomePage>
               top: 12,
               left: 12,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: Colors.white.withValues(alpha: 0.9),
@@ -1037,8 +1023,11 @@ class _MainHomePageState extends State<MainHomePage>
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.star_rounded,
-                        color: Color(0xFFFFB800), size: 14),
+                    const Icon(
+                      Icons.star_rounded,
+                      color: Color(0xFFFFB800),
+                      size: 14,
+                    ),
                     const SizedBox(width: 3),
                     Text(
                       rating,
@@ -1120,15 +1109,6 @@ class _MainHomePageState extends State<MainHomePage>
           ],
         ),
       ),
-    );
-  }
-
-
-  Widget _statDivider() {
-    return Container(
-      width: 1,
-      height: 50,
-      color: const Color(0xFF442A22).withValues(alpha: 0.12),
     );
   }
 }

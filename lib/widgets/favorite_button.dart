@@ -4,8 +4,17 @@ import '../services/favorite_service.dart';
 
 class FavoriteButton extends StatefulWidget {
   final FavoriteItem item;
+  final Color iconColor;
+  final Color activeColor;
+  final Color backgroundColor;
 
-  const FavoriteButton({super.key, required this.item});
+  const FavoriteButton({
+    super.key,
+    required this.item,
+    this.iconColor = Colors.white,
+    this.activeColor = Colors.white,
+    this.backgroundColor = const Color.fromARGB(0, 255, 255, 255),
+  });
 
   @override
   State<FavoriteButton> createState() => _FavoriteButtonState();
@@ -21,7 +30,8 @@ class _FavoriteButtonState extends State<FavoriteButton> {
   }
 
   void check() async {
-    isFav = await FavoriteService.isFavorite(widget.item.title);
+    isFav = await FavoriteService.isFavoriteItem(widget.item);
+    if (!mounted) return;
     setState(() {});
   }
 
@@ -35,11 +45,11 @@ class _FavoriteButtonState extends State<FavoriteButton> {
     return GestureDetector(
       onTap: toggle,
       child: CircleAvatar(
-        backgroundColor: const Color.fromARGB(0, 255, 255, 255),
+        backgroundColor: widget.backgroundColor,
         child: Icon(
-  isFav ? Icons.favorite : Icons.favorite_border,
-  color: isFav ? Colors.white : Colors.white,
-)
+          isFav ? Icons.favorite : Icons.favorite_border,
+          color: isFav ? widget.activeColor : widget.iconColor,
+        ),
       ),
     );
   }
